@@ -2,683 +2,475 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#050509">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#05050a">
+<meta name="apple-mobile-web-app-capable" content="yes">
 
-<title>Emine — Senin İçin ❤️</title>
+<title>Emine ❤️</title>
 
 <style>
-/* =========================================================
-   RESET
-========================================================= */
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    -webkit-tap-highlight-color:transparent;
 }
 
-html {
-    scroll-behavior: smooth;
+html{
+    scroll-behavior:smooth;
 }
 
-body {
-    background: #030305;
-    color: #ffffff;
+body{
+    background:#030307;
+    color:#fff;
     font-family:
-        Inter,
         -apple-system,
         BlinkMacSystemFont,
         "Segoe UI",
         Arial,
         sans-serif;
-    overflow-x: hidden;
+    overflow-x:hidden;
+    touch-action:pan-y;
 }
 
-button {
-    font: inherit;
+button{
+    font:inherit;
 }
 
-a {
-    color: inherit;
-    text-decoration: none;
+canvas{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
 }
 
-
-/* =========================================================
-   VARIABLES
-========================================================= */
-
-:root {
-    --bg: #030305;
-    --bg2: #080810;
-    --text: #ffffff;
-    --muted: rgba(255,255,255,.62);
-    --soft: rgba(255,255,255,.08);
-    --line: rgba(255,255,255,.12);
-
-    --pink: #ff5f9e;
-    --pink2: #ff9fc5;
-    --purple: #9b7cff;
-    --blue: #6ca8ff;
-
-    --radius: 28px;
+#stars{
+    z-index:-10;
 }
 
-
-/* =========================================================
-   SCROLLBAR
-========================================================= */
-
-::-webkit-scrollbar {
-    width: 8px;
+#fx{
+    z-index:100;
 }
 
-::-webkit-scrollbar-track {
-    background: #030305;
-}
-
-::-webkit-scrollbar-thumb {
-    background: rgba(255,255,255,.18);
-    border-radius: 20px;
-}
-
-
-/* =========================================================
-   LOADING SCREEN
-========================================================= */
-
-#loader {
-    position: fixed;
-    inset: 0;
-    z-index: 99999;
+.background{
+    position:fixed;
+    inset:0;
+    z-index:-9;
+    overflow:hidden;
     background:
         radial-gradient(
-            circle at center,
-            #171321 0%,
-            #07060b 40%,
-            #020204 100%
-        );
+            circle at 50% 20%,
+            rgba(137,85,255,.12),
+            transparent 45%
+        ),
+        radial-gradient(
+            circle at 10% 80%,
+            rgba(255,77,153,.09),
+            transparent 40%
+        ),
+        #030307;
+}
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.orb{
+    position:absolute;
+    border-radius:50%;
+    filter:blur(80px);
+    opacity:.25;
+    animation:orbFloat 12s ease-in-out infinite;
+}
+
+.orb1{
+    width:250px;
+    height:250px;
+    background:#8d5cff;
+    top:8%;
+    left:-100px;
+}
+
+.orb2{
+    width:230px;
+    height:230px;
+    background:#ff4d98;
+    right:-100px;
+    top:50%;
+    animation-delay:-5s;
+}
+
+.orb3{
+    width:200px;
+    height:200px;
+    background:#527dff;
+    left:35%;
+    bottom:-100px;
+    animation-delay:-8s;
+}
+
+@keyframes orbFloat{
+    0%,100%{
+        transform:translate(0,0) scale(1);
+    }
+    50%{
+        transform:translate(25px,-30px) scale(1.15);
+    }
+}
+
+
+/* LOADER */
+
+#loader{
+    position:fixed;
+    inset:0;
+    z-index:99999;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:#030307;
 
     transition:
         opacity 1s ease,
         visibility 1s ease;
 }
 
-#loader.hidden {
-    opacity: 0;
-    visibility: hidden;
+#loader.hide{
+    opacity:0;
+    visibility:hidden;
 }
 
-.loader-content {
-    width: min(520px, 85vw);
+.loaderBox{
+    width:78%;
+    max-width:430px;
 }
 
-.loader-top {
-    color: rgba(255,255,255,.45);
-    font-size: 11px;
-    letter-spacing: 4px;
-    margin-bottom: 20px;
+.loaderSmall{
+    color:#777;
+    font-size:9px;
+    letter-spacing:4px;
+    margin-bottom:18px;
 }
 
-.loader-title {
-    font-size: clamp(28px, 6vw, 52px);
-    font-weight: 300;
-    letter-spacing: -2px;
-    margin-bottom: 30px;
+.loaderTitle{
+    font-size:28px;
+    font-weight:300;
+    line-height:1.2;
+    margin-bottom:25px;
 }
 
-.loader-title span {
-    color: var(--pink2);
+.loaderTitle span{
+    color:#ff9fc7;
 }
 
-.loader-bar {
-    width: 100%;
-    height: 2px;
-    background: rgba(255,255,255,.1);
-    overflow: hidden;
+.loaderLine{
+    height:2px;
+    background:rgba(255,255,255,.1);
 }
 
-.loader-progress {
-    width: 0%;
-    height: 100%;
-    background: linear-gradient(
+.loaderProgress{
+    width:0;
+    height:100%;
+    background:linear-gradient(
         90deg,
-        var(--purple),
-        var(--pink)
+        #9c7cff,
+        #ff75ae
     );
-    transition: width .15s linear;
+    transition:width .15s linear;
 }
 
-.loader-status {
-    margin-top: 15px;
-    color: rgba(255,255,255,.4);
-    font-size: 12px;
-    letter-spacing: 1px;
-}
-
-
-/* =========================================================
-   CANVAS
-========================================================= */
-
-#stars {
-    position: fixed;
-    inset: 0;
-    z-index: -5;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-}
-
-#particles {
-    position: fixed;
-    inset: 0;
-    z-index: 20;
-    pointer-events: none;
+.loaderStatus{
+    margin-top:12px;
+    color:#666;
+    font-size:11px;
 }
 
 
-/* =========================================================
-   AMBIENT BACKGROUND
-========================================================= */
+/* NAV */
 
-.ambient {
-    position: fixed;
-    inset: 0;
-    z-index: -4;
-    pointer-events: none;
-    overflow: hidden;
+nav{
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+
+    height:70px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    padding:0 20px;
+
+    z-index:1000;
+
+    opacity:0;
+    transform:translateY(-15px);
+
+    transition:.8s ease;
 }
 
-.glow {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(100px);
-    opacity: .18;
-    animation: floatGlow 12s ease-in-out infinite;
+nav.show{
+    opacity:1;
+    transform:translateY(0);
 }
 
-.glow.one {
-    width: 380px;
-    height: 380px;
-    background: #8c4dff;
-    left: -120px;
-    top: 15%;
+.logo{
+    font-size:11px;
+    letter-spacing:3px;
+    color:#aaa;
+    text-transform:uppercase;
 }
 
-.glow.two {
-    width: 320px;
-    height: 320px;
-    background: #ff3f91;
-    right: -100px;
-    top: 50%;
-    animation-delay: -5s;
+.logo span{
+    color:#ff9fc7;
 }
 
-.glow.three {
-    width: 280px;
-    height: 280px;
-    background: #3d7cff;
-    left: 35%;
-    bottom: -100px;
-    animation-delay: -8s;
+.music{
+    width:42px;
+    height:42px;
+
+    border-radius:50%;
+
+    border:1px solid rgba(255,255,255,.15);
+
+    background:rgba(255,255,255,.06);
+
+    color:#fff;
+
+    backdrop-filter:blur(15px);
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:16px;
 }
 
-@keyframes floatGlow {
-    0%,100% {
-        transform: translate3d(0,0,0) scale(1);
+
+/* GENERAL */
+
+section{
+    min-height:100svh;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    padding:
+        90px 22px;
+}
+
+.inner{
+    width:100%;
+    max-width:650px;
+}
+
+.label{
+    font-size:9px;
+    letter-spacing:4px;
+    color:#666;
+    margin-bottom:20px;
+}
+
+.title{
+    font-size:
+        clamp(42px,13vw,80px);
+
+    font-weight:200;
+
+    letter-spacing:-3px;
+
+    line-height:.95;
+}
+
+.pink{
+    color:#ff9fc7;
+}
+
+.description{
+    margin-top:25px;
+
+    color:#999;
+
+    font-size:16px;
+
+    line-height:1.8;
+}
+
+
+/* HERO */
+
+.hero{
+    min-height:100svh;
+
+    text-align:center;
+
+    position:relative;
+
+    overflow:hidden;
+}
+
+.heroContent{
+    width:100%;
+}
+
+.heroSmall{
+    color:#777;
+
+    font-size:9px;
+
+    letter-spacing:5px;
+
+    opacity:0;
+
+    animation:
+        appear 1s 1.8s forwards;
+}
+
+.heroName{
+    margin-top:22px;
+
+    font-size:
+        clamp(75px,24vw,150px);
+
+    font-weight:200;
+
+    line-height:.8;
+
+    letter-spacing:-7px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #fff 25%,
+            #ffb4d4 55%,
+            #a18cff 90%
+        );
+
+    -webkit-background-clip:text;
+    background-clip:text;
+
+    color:transparent;
+
+    opacity:0;
+
+    transform:scale(.9);
+
+    animation:
+        nameAppear 1.5s 2s forwards;
+}
+
+.heroText{
+    margin-top:30px;
+
+    color:#999;
+
+    font-size:17px;
+
+    opacity:0;
+
+    animation:
+        appear 1s 2.7s forwards;
+}
+
+.start{
+    margin-top:35px;
+
+    border:
+        1px solid rgba(255,255,255,.18);
+
+    background:
+        rgba(255,255,255,.06);
+
+    color:#fff;
+
+    border-radius:999px;
+
+    padding:15px 28px;
+
+    font-size:14px;
+
+    opacity:0;
+
+    animation:
+        appear 1s 3s forwards;
+}
+
+.start span{
+    color:#ff9fc7;
+    margin-left:8px;
+}
+
+.scroll{
+    position:absolute;
+
+    bottom:25px;
+    left:50%;
+
+    transform:translateX(-50%);
+
+    color:#555;
+
+    font-size:8px;
+
+    letter-spacing:3px;
+
+    animation:
+        scrollAnim 2s infinite;
+}
+
+@keyframes appear{
+    to{
+        opacity:1;
+    }
+}
+
+@keyframes nameAppear{
+    to{
+        opacity:1;
+        transform:scale(1);
+    }
+}
+
+@keyframes scrollAnim{
+    0%,100%{
+        opacity:.2;
+        transform:
+            translate(-50%,0);
     }
 
-    50% {
-        transform: translate3d(30px,-40px,0) scale(1.15);
+    50%{
+        opacity:.7;
+        transform:
+            translate(-50%,8px);
     }
 }
 
 
-/* =========================================================
-   TOP NAV
-========================================================= */
+/* REVEAL */
 
-.nav {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 1000;
-
-    padding: 22px 5vw;
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    pointer-events: none;
-
-    opacity: 0;
-    transform: translateY(-20px);
+.reveal{
+    opacity:0;
+    transform:translateY(45px);
 
     transition:
         opacity 1s ease,
-        transform 1s ease;
+        transform 1s cubic-bezier(.2,.8,.2,1);
 }
 
-.nav.visible {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-.logo {
-    pointer-events: auto;
-    font-size: 14px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: rgba(255,255,255,.75);
-}
-
-.logo span {
-    color: var(--pink2);
-}
-
-.music-button {
-    pointer-events: auto;
-
-    width: 44px;
-    height: 44px;
-
-    border-radius: 50%;
-    border: 1px solid rgba(255,255,255,.16);
-
-    background: rgba(255,255,255,.06);
-    color: white;
-
-    cursor: pointer;
-
-    backdrop-filter: blur(15px);
-
-    transition:
-        transform .3s ease,
-        background .3s ease;
-}
-
-.music-button:hover {
-    transform: scale(1.08);
-    background: rgba(255,255,255,.12);
+.reveal.active{
+    opacity:1;
+    transform:translateY(0);
 }
 
 
-/* =========================================================
-   HERO
-========================================================= */
+/* LETTER */
 
-.hero {
-    min-height: 100svh;
+.letter{
+    padding:28px;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    border:
+        1px solid rgba(255,255,255,.1);
 
-    position: relative;
-
-    padding: 100px 20px 80px;
-}
-
-.hero-inner {
-    text-align: center;
-    max-width: 1000px;
-}
-
-.eyebrow {
-    font-size: 11px;
-    letter-spacing: 5px;
-    color: rgba(255,255,255,.42);
-    text-transform: uppercase;
-
-    opacity: 0;
-    transform: translateY(20px);
-
-    animation: heroUp 1s 2s forwards;
-}
-
-.hero-name {
-    margin-top: 20px;
-
-    font-size: clamp(
-        72px,
-        17vw,
-        190px
-    );
-
-    line-height: .85;
-
-    font-weight: 200;
-
-    letter-spacing: -8px;
-
-    background:
-        linear-gradient(
-            135deg,
-            #ffffff 20%,
-            #ffb5d5 48%,
-            #9e8bff 85%
-        );
-
-    -webkit-background-clip: text;
-    background-clip: text;
-
-    color: transparent;
-
-    opacity: 0;
-    transform: scale(.94);
-
-    animation: heroName 1.6s 2.1s forwards;
-}
-
-.hero-subtitle {
-    margin-top: 35px;
-
-    color: var(--muted);
-
-    font-size: clamp(
-        17px,
-        3vw,
-        23px
-    );
-
-    font-weight: 300;
-
-    opacity: 0;
-
-    animation: heroUp 1s 2.7s forwards;
-}
-
-.hero-button {
-    margin-top: 45px;
-
-    border: 1px solid rgba(255,255,255,.18);
-
-    background:
-        linear-gradient(
-            135deg,
-            rgba(255,255,255,.12),
-            rgba(255,255,255,.04)
-        );
-
-    color: white;
-
-    padding: 16px 30px;
-
-    border-radius: 999px;
-
-    cursor: pointer;
-
-    backdrop-filter: blur(20px);
-
-    opacity: 0;
-
-    animation: heroUp 1s 3.1s forwards;
-
-    transition:
-        transform .3s ease,
-        background .3s ease,
-        border-color .3s ease;
-}
-
-.hero-button:hover {
-    transform: translateY(-4px);
-    background: rgba(255,255,255,.13);
-    border-color: rgba(255,255,255,.3);
-}
-
-.hero-button span {
-    margin-left: 10px;
-    color: var(--pink2);
-}
-
-.scroll-hint {
-    position: absolute;
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%);
-
-    color: rgba(255,255,255,.28);
-
-    font-size: 10px;
-    letter-spacing: 3px;
-
-    animation: scrollPulse 2s infinite;
-}
-
-@keyframes scrollPulse {
-    0%,100% {
-        opacity: .25;
-        transform: translate(-50%,0);
-    }
-
-    50% {
-        opacity: .7;
-        transform: translate(-50%,8px);
-    }
-}
-
-@keyframes heroUp {
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes heroName {
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-
-/* =========================================================
-   SECTIONS
-========================================================= */
-
-section {
-    position: relative;
-}
-
-.section {
-    min-height: 100svh;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    padding:
-        120px 7vw;
-}
-
-.section-inner {
-    width: min(1100px, 100%);
-}
-
-.section-label {
-    font-size: 10px;
-    letter-spacing: 4px;
-    color: rgba(255,255,255,.35);
-    text-transform: uppercase;
-
-    margin-bottom: 20px;
-}
-
-.section-title {
-    font-size: clamp(
-        42px,
-        8vw,
-        88px
-    );
-
-    font-weight: 200;
-
-    letter-spacing: -4px;
-
-    line-height: .95;
-
-    max-width: 900px;
-}
-
-.section-title .accent {
-    color: var(--pink2);
-}
-
-.section-text {
-    max-width: 650px;
-
-    margin-top: 30px;
-
-    color: var(--muted);
-
-    font-size: 18px;
-
-    line-height: 1.9;
-}
-
-
-/* =========================================================
-   REVEAL
-========================================================= */
-
-.reveal {
-    opacity: 0;
-    transform: translateY(60px);
-
-    transition:
-        opacity 1s ease,
-        transform 1s cubic-bezier(.2,.7,.2,1);
-}
-
-.reveal.show {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-
-/* =========================================================
-   LETTER
-========================================================= */
-
-.letter-section {
-    min-height: 100svh;
-}
-
-.letter-card {
-    position: relative;
-
-    padding:
-        clamp(30px, 6vw, 70px);
-
-    border-radius: var(--radius);
-
-    background:
-        linear-gradient(
-            135deg,
-            rgba(255,255,255,.09),
-            rgba(255,255,255,.025)
-        );
-
-    border: 1px solid var(--line);
-
-    backdrop-filter: blur(25px);
-
-    box-shadow:
-        0 40px 100px rgba(0,0,0,.35);
-
-    overflow: hidden;
-}
-
-.letter-card::before {
-    content: "";
-
-    position: absolute;
-
-    width: 250px;
-    height: 250px;
-
-    border-radius: 50%;
-
-    background: var(--pink);
-
-    filter: blur(130px);
-
-    opacity: .12;
-
-    right: -100px;
-    top: -100px;
-}
-
-.letter-top {
-    display: flex;
-    justify-content: space-between;
-
-    color: rgba(255,255,255,.35);
-
-    font-size: 11px;
-    letter-spacing: 2px;
-
-    margin-bottom: 50px;
-}
-
-.letter-text {
-    font-size: clamp(
-        24px,
-        4vw,
-        42px
-    );
-
-    font-weight: 300;
-
-    line-height: 1.45;
-
-    letter-spacing: -1px;
-}
-
-.letter-text .pink {
-    color: var(--pink2);
-}
-
-.signature {
-    margin-top: 50px;
-
-    color: rgba(255,255,255,.45);
-
-    font-size: 14px;
-}
-
-
-/* =========================================================
-   MEMORY GRID
-========================================================= */
-
-.memory-grid {
-    display: grid;
-
-    grid-template-columns:
-        repeat(3, 1fr);
-
-    gap: 18px;
-
-    margin-top: 60px;
-}
-
-.memory {
-    min-height: 230px;
-
-    border: 1px solid var(--line);
-
-    border-radius: 24px;
-
-    padding: 28px;
+    border-radius:25px;
 
     background:
         linear-gradient(
@@ -687,557 +479,584 @@ section {
             rgba(255,255,255,.025)
         );
 
-    position: relative;
+    backdrop-filter:blur(25px);
 
-    overflow: hidden;
-
-    transition:
-        transform .5s cubic-bezier(.2,.8,.2,1),
-        border-color .4s ease;
+    box-shadow:
+        0 30px 80px rgba(0,0,0,.35);
 }
 
-.memory:hover {
-    transform: translateY(-10px);
-    border-color: rgba(255,255,255,.25);
+.letterTop{
+    display:flex;
+    justify-content:space-between;
+
+    color:#555;
+
+    font-size:9px;
+
+    letter-spacing:2px;
+
+    margin-bottom:35px;
 }
 
-.memory-number {
-    color: rgba(255,255,255,.25);
-    font-size: 12px;
+.letterText{
+    font-size:
+        clamp(23px,6vw,38px);
+
+    line-height:1.45;
+
+    font-weight:300;
+
+    letter-spacing:-1px;
 }
 
-.memory h3 {
-    margin-top: 40px;
+.signature{
+    margin-top:35px;
 
-    font-size: 25px;
+    color:#666;
 
-    font-weight: 400;
-}
-
-.memory p {
-    margin-top: 12px;
-
-    color: var(--muted);
-
-    line-height: 1.6;
-
-    font-size: 14px;
-}
-
-.memory::after {
-    content: "♡";
-
-    position: absolute;
-
-    right: 20px;
-    bottom: 5px;
-
-    font-size: 80px;
-
-    color: rgba(255,255,255,.025);
+    font-size:12px;
 }
 
 
-/* =========================================================
-   COUNTDOWN
-========================================================= */
+/* MEMORY */
 
-.countdown-section {
-    text-align: center;
+.memoryGrid{
+    margin-top:45px;
+
+    display:flex;
+    flex-direction:column;
+
+    gap:14px;
 }
 
-.countdown {
-    display: grid;
+.memory{
+    padding:25px;
 
-    grid-template-columns:
-        repeat(4, 1fr);
+    border-radius:22px;
 
-    gap: 15px;
+    border:
+        1px solid rgba(255,255,255,.09);
 
-    margin-top: 60px;
-
-    max-width: 850px;
-
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.time-box {
-    padding: 30px 15px;
-
-    border-radius: 22px;
-
-    background: rgba(255,255,255,.05);
-
-    border: 1px solid var(--line);
-
-    backdrop-filter: blur(15px);
-}
-
-.time-number {
-    font-size: clamp(
-        34px,
-        7vw,
-        65px
-    );
-
-    font-weight: 200;
-}
-
-.time-label {
-    margin-top: 8px;
-
-    color: rgba(255,255,255,.35);
-
-    font-size: 10px;
-
-    letter-spacing: 2px;
-
-    text-transform: uppercase;
-}
-
-
-/* =========================================================
-   GIFT
-========================================================= */
-
-.gift-section {
-    text-align: center;
-}
-
-.gift {
-    width: 180px;
-    height: 150px;
-
-    position: relative;
-
-    margin:
-        80px auto 30px;
-
-    cursor: pointer;
+    background:
+        rgba(255,255,255,.045);
 
     transition:
         transform .4s ease;
 }
 
-.gift:hover {
-    transform: translateY(-8px) scale(1.04);
+.memory:active{
+    transform:scale(.97);
 }
 
-.gift-box {
-    position: absolute;
-
-    left: 15px;
-    right: 15px;
-    bottom: 0;
-
-    height: 110px;
-
-    border-radius: 8px;
-
-    background:
-        linear-gradient(
-            135deg,
-            #d83277,
-            #ff6fa8
-        );
-
-    box-shadow:
-        0 30px 50px rgba(255,80,150,.18);
+.memoryNumber{
+    color:#555;
+    font-size:10px;
 }
 
-.gift-lid {
-    position: absolute;
+.memory h3{
+    margin-top:28px;
 
-    left: 5px;
-    right: 5px;
-    top: 20px;
+    font-size:24px;
 
-    height: 35px;
+    font-weight:400;
+}
 
-    border-radius: 7px;
+.memory p{
+    margin-top:10px;
+
+    color:#888;
+
+    font-size:14px;
+
+    line-height:1.7;
+}
+
+
+/* COUNTDOWN */
+
+.center{
+    text-align:center;
+}
+
+.countdown{
+    margin-top:45px;
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(2,1fr);
+
+    gap:10px;
+}
+
+.time{
+    padding:24px 10px;
+
+    border-radius:20px;
 
     background:
-        linear-gradient(
-            135deg,
-            #f24c91,
-            #ff8fba
-        );
+        rgba(255,255,255,.05);
 
-    z-index: 3;
+    border:
+        1px solid rgba(255,255,255,.09);
+}
+
+.number{
+    font-size:42px;
+    font-weight:200;
+}
+
+.unit{
+    margin-top:5px;
+
+    color:#555;
+
+    font-size:8px;
+
+    letter-spacing:2px;
+
+    text-transform:uppercase;
+}
+
+
+/* GIFT */
+
+.giftArea{
+    text-align:center;
+}
+
+.gift{
+    position:relative;
+
+    width:150px;
+    height:130px;
+
+    margin:60px auto 25px;
 
     transition:
-        transform .8s cubic-bezier(.2,.8,.2,1);
+        transform .5s ease;
 }
 
-.gift-ribbon {
-    position: absolute;
-
-    top: 0;
-    bottom: 0;
-
-    left: 50%;
-
-    transform: translateX(-50%);
-
-    width: 25px;
-
-    background: rgba(255,255,255,.55);
-
-    z-index: 4;
+.gift:active{
+    transform:scale(.95);
 }
 
-.gift.open .gift-lid {
+.giftBox{
+    position:absolute;
+
+    bottom:0;
+
+    left:10px;
+    right:10px;
+
+    height:95px;
+
+    border-radius:8px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #d83378,
+            #ff76ad
+        );
+}
+
+.giftLid{
+    position:absolute;
+
+    top:20px;
+
+    left:0;
+    right:0;
+
+    height:30px;
+
+    border-radius:7px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ef4c91,
+            #ff94be
+        );
+
+    z-index:4;
+
+    transition:
+        transform .7s ease;
+}
+
+.ribbon{
+    position:absolute;
+
+    z-index:5;
+
+    left:50%;
+
+    transform:translateX(-50%);
+
+    width:22px;
+
+    top:0;
+    bottom:0;
+
+    background:
+        rgba(255,255,255,.5);
+}
+
+.gift.open .giftLid{
     transform:
-        translateY(-55px)
+        translateY(-50px)
         rotate(-8deg);
 }
 
-.gift-message {
-    max-width: 600px;
+.giftMessage{
+    max-width:500px;
 
-    margin: 0 auto;
+    margin:auto;
 
-    opacity: 0;
+    opacity:0;
 
-    transform: translateY(20px);
+    transform:translateY(20px);
 
-    transition:
-        opacity .8s ease,
-        transform .8s ease;
-
-    pointer-events: none;
+    transition:.8s ease;
 }
 
-.gift-message.show {
-    opacity: 1;
-    transform: translateY(0);
+.giftMessage.show{
+    opacity:1;
+    transform:translateY(0);
 }
 
-.gift-message h3 {
-    font-size: 32px;
-    font-weight: 300;
+.giftMessage h3{
+    font-size:28px;
+    font-weight:300;
 }
 
-.gift-message p {
-    margin-top: 18px;
-    color: var(--muted);
-    line-height: 1.8;
+.giftMessage p{
+    margin-top:15px;
+
+    color:#888;
+
+    line-height:1.8;
 }
 
 
-/* =========================================================
-   FINAL
-========================================================= */
+/* FINAL */
 
-.final-section {
-    min-height: 110svh;
+.final{
+    text-align:center;
 
-    text-align: center;
-
-    display: flex;
-
-    align-items: center;
-    justify-content: center;
-
-    padding: 100px 20px;
+    min-height:110svh;
 }
 
-.final-heart {
-    font-size: 65px;
+.finalHeart{
+    font-size:60px;
 
-    color: var(--pink2);
+    color:#ff9fc7;
 
     animation:
-        finalHeart 2s infinite;
+        heartbeat 1.7s infinite;
 }
 
-@keyframes finalHeart {
-    0%,100% {
-        transform: scale(1);
-    }
+.finalTitle{
+    margin-top:20px;
 
-    50% {
-        transform: scale(1.15);
-    }
-}
+    font-size:
+        clamp(60px,17vw,130px);
 
-.final-title {
-    margin-top: 25px;
+    line-height:.82;
 
-    font-size: clamp(
-        55px,
-        12vw,
-        150px
-    );
+    letter-spacing:-6px;
 
-    line-height: .85;
-
-    font-weight: 200;
-
-    letter-spacing: -7px;
+    font-weight:200;
 
     background:
         linear-gradient(
             135deg,
-            white,
-            #ff9fc5,
-            #a98cff
+            #fff,
+            #ff9fc7,
+            #a28cff
         );
 
-    -webkit-background-clip: text;
-    background-clip: text;
+    -webkit-background-clip:text;
+    background-clip:text;
 
-    color: transparent;
+    color:transparent;
 }
 
-.final-text {
-    margin:
-        40px auto 0;
+.finalText{
+    max-width:500px;
 
-    max-width: 650px;
+    margin:35px auto 0;
 
-    color: var(--muted);
+    color:#888;
 
-    font-size: 18px;
+    line-height:1.8;
 
-    line-height: 1.8;
+    font-size:15px;
 }
 
-.final-signature {
-    margin-top: 45px;
+.signatureFinal{
+    margin-top:35px;
 
-    color: rgba(255,255,255,.4);
+    color:#555;
 
-    font-size: 13px;
+    font-size:11px;
 
-    letter-spacing: 2px;
+    letter-spacing:2px;
 }
 
+@keyframes heartbeat{
+    0%,100%{
+        transform:scale(1);
+    }
 
-/* =========================================================
-   EASTER EGG
-========================================================= */
-
-.secret {
-    position: fixed;
-
-    bottom: 15px;
-    right: 18px;
-
-    width: 12px;
-    height: 12px;
-
-    border-radius: 50%;
-
-    background: rgba(255,255,255,.05);
-
-    cursor: pointer;
-
-    z-index: 2000;
-
-    transition:
-        background .3s ease,
-        transform .3s ease;
-}
-
-.secret:hover {
-    background: rgba(255,255,255,.2);
-    transform: scale(1.5);
-}
-
-.secret-message {
-    position: fixed;
-
-    left: 50%;
-    top: 50%;
-
-    transform:
-        translate(-50%,-50%)
-        scale(.8);
-
-    width: min(500px, 85vw);
-
-    padding: 45px;
-
-    background:
-        rgba(10,10,16,.92);
-
-    border:
-        1px solid rgba(255,255,255,.15);
-
-    border-radius: 28px;
-
-    backdrop-filter: blur(30px);
-
-    text-align: center;
-
-    opacity: 0;
-    visibility: hidden;
-
-    z-index: 5000;
-
-    transition:
-        opacity .4s ease,
-        transform .4s ease,
-        visibility .4s ease;
-}
-
-.secret-message.show {
-    opacity: 1;
-    visibility: visible;
-
-    transform:
-        translate(-50%,-50%)
-        scale(1);
-}
-
-.secret-message h3 {
-    font-size: 30px;
-    font-weight: 300;
-}
-
-.secret-message p {
-    margin-top: 15px;
-
-    color: var(--muted);
-
-    line-height: 1.7;
-}
-
-.close-secret {
-    margin-top: 25px;
-
-    border: 1px solid rgba(255,255,255,.15);
-
-    background: rgba(255,255,255,.06);
-
-    color: white;
-
-    padding: 10px 20px;
-
-    border-radius: 999px;
-
-    cursor: pointer;
+    50%{
+        transform:scale(1.18);
+    }
 }
 
 
-/* =========================================================
-   CONFETTI
-========================================================= */
+/* TOUCH HEART */
 
-.confetti {
-    position: fixed;
+.touchHeart{
+    position:fixed;
 
-    width: 8px;
-    height: 14px;
+    z-index:500;
 
-    top: -20px;
+    pointer-events:none;
 
-    z-index: 9000;
-
-    pointer-events: none;
+    font-size:18px;
 
     animation:
-        confettiFall linear forwards;
+        heartFloat 1.1s ease forwards;
 }
 
-@keyframes confettiFall {
-    to {
+@keyframes heartFloat{
+    0%{
+        opacity:1;
         transform:
-            translate3d(
-                var(--x),
-                110vh,
-                0
+            translate(-50%,-50%)
+            scale(.5);
+    }
+
+    100%{
+        opacity:0;
+        transform:
+            translate(
+                -50%,
+                calc(-50% - 80px)
+            )
+            scale(1.4);
+    }
+}
+
+
+/* CONFETTI */
+
+.confetti{
+    position:fixed;
+
+    top:-20px;
+
+    width:7px;
+    height:13px;
+
+    z-index:5000;
+
+    pointer-events:none;
+
+    animation:
+        fall linear forwards;
+}
+
+@keyframes fall{
+    to{
+        transform:
+            translate(
+                var(--moveX),
+                110vh
             )
             rotate(720deg);
 
-        opacity: 0;
+        opacity:0;
     }
 }
 
 
-/* =========================================================
-   MOBILE
-========================================================= */
+/* SECRET */
 
-@media (max-width: 800px) {
+.secretDot{
+    position:fixed;
 
-    .memory-grid {
-        grid-template-columns: 1fr;
+    right:12px;
+    bottom:12px;
+
+    width:8px;
+    height:8px;
+
+    border-radius:50%;
+
+    background:
+        rgba(255,255,255,.08);
+
+    z-index:2000;
+}
+
+.secretBox{
+    position:fixed;
+
+    inset:0;
+
+    z-index:9000;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    padding:25px;
+
+    background:
+        rgba(0,0,0,.65);
+
+    backdrop-filter:blur(15px);
+
+    opacity:0;
+    visibility:hidden;
+
+    transition:.4s ease;
+}
+
+.secretBox.show{
+    opacity:1;
+    visibility:visible;
+}
+
+.secretCard{
+    width:100%;
+    max-width:430px;
+
+    padding:35px;
+
+    border-radius:28px;
+
+    text-align:center;
+
+    background:#0b0b12;
+
+    border:
+        1px solid rgba(255,255,255,.12);
+
+    transform:scale(.9);
+
+    transition:.4s ease;
+}
+
+.secretBox.show .secretCard{
+    transform:scale(1);
+}
+
+.secretCard h3{
+    font-size:28px;
+
+    font-weight:300;
+}
+
+.secretCard p{
+    margin-top:15px;
+
+    color:#888;
+
+    line-height:1.7;
+}
+
+.close{
+    margin-top:25px;
+
+    padding:10px 22px;
+
+    border:
+        1px solid rgba(255,255,255,.12);
+
+    background:
+        rgba(255,255,255,.06);
+
+    color:white;
+
+    border-radius:999px;
+}
+
+
+/* DESKTOP */
+
+@media(min-width:700px){
+
+    section{
+        padding:
+            120px 6vw;
     }
 
-    .countdown {
+    .memoryGrid{
+        display:grid;
+
         grid-template-columns:
-            repeat(2, 1fr);
+            repeat(3,1fr);
     }
 
-    .section {
-        padding:
-            100px 22px;
+    .countdown{
+        grid-template-columns:
+            repeat(4,1fr);
     }
 
-    .hero-name {
-        letter-spacing: -5px;
+    .letter{
+        padding:60px;
     }
 
-    .letter-text {
-        font-size: 25px;
-    }
 }
 
-@media (max-width: 450px) {
 
-    .countdown {
-        gap: 8px;
+/* REDUCE MOTION */
+
+@media(prefers-reduced-motion:reduce){
+
+    *,
+    *::before,
+    *::after{
+        animation-duration:.01ms !important;
+        animation-iteration-count:1 !important;
+        scroll-behavior:auto !important;
+        transition-duration:.01ms !important;
     }
 
-    .time-box {
-        padding: 22px 8px;
-    }
-
-    .time-number {
-        font-size: 35px;
-    }
-
-    .hero-button {
-        padding:
-            14px 22px;
-    }
 }
 </style>
 </head>
 
-
 <body>
-
-
-<!-- =====================================================
-     LOADER
-===================================================== -->
 
 <div id="loader">
 
-    <div class="loader-content">
+    <div class="loaderBox">
 
-        <div class="loader-top">
+        <div class="loaderSmall">
             PERSONAL PROJECT / 2026
         </div>
 
-        <div class="loader-title">
+        <div class="loaderTitle">
             Bir şeyler hazırlanıyor<span>...</span>
         </div>
 
-        <div class="loader-bar">
+        <div class="loaderLine">
             <div
-                class="loader-progress"
-                id="loaderProgress">
+                class="loaderProgress"
+                id="progress">
             </div>
         </div>
 
         <div
-            class="loader-status"
-            id="loaderStatus">
+            class="loaderStatus"
+            id="status">
             Başlatılıyor...
         </div>
 
@@ -1246,118 +1065,91 @@ section {
 </div>
 
 
-<!-- =====================================================
-     BACKGROUND
-===================================================== -->
-
 <canvas id="stars"></canvas>
+<canvas id="fx"></canvas>
 
-<canvas id="particles"></canvas>
 
-<div class="ambient">
+<div class="background">
 
-    <div class="glow one"></div>
-
-    <div class="glow two"></div>
-
-    <div class="glow three"></div>
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+    <div class="orb orb3"></div>
 
 </div>
 
 
-<!-- =====================================================
-     NAV
-===================================================== -->
-
-<nav
-    class="nav"
-    id="nav">
+<nav id="nav">
 
     <div class="logo">
         made for <span>Emine</span>
     </div>
 
     <button
-        class="music-button"
-        id="musicButton"
-        aria-label="Müzik">
-
+        class="music"
+        id="music">
         ♫
-
     </button>
 
 </nav>
 
 
-<!-- =====================================================
-     HERO
-===================================================== -->
-
 <main>
+
 
 <section class="hero">
 
-    <div class="hero-inner">
+    <div class="heroContent">
 
-        <div class="eyebrow">
-            SENİN İÇİN HAZIRLANDI
+        <div class="heroSmall">
+            SENİN İÇİN
         </div>
 
-        <h1 class="hero-name">
+        <h1 class="heroName">
             Emine
         </h1>
 
-        <p class="hero-subtitle">
+        <p class="heroText">
             Sana küçük bir şey hazırladım...
         </p>
 
         <button
-            class="hero-button"
-            id="startButton">
-
-            Başla
-
-            <span>→</span>
-
+            class="start"
+            id="start">
+            Başla <span>→</span>
         </button>
 
     </div>
 
-    <div class="scroll-hint">
+    <div class="scroll">
         AŞAĞI KAYDIR
     </div>
 
 </section>
 
 
-<!-- =====================================================
-     INTRO
-===================================================== -->
+<section>
 
-<section class="section">
+    <div class="inner">
 
-    <div class="section-inner">
-
-        <div class="section-label reveal">
+        <div class="label reveal">
             01 / BAŞLANGIÇ
         </div>
 
-        <h2 class="section-title reveal">
+        <h2 class="title reveal">
 
             Bazı insanlar
             hayatımıza gelir...
 
-            <span class="accent">
-                ve fark ettirmeden
-                güzel bir iz bırakır.
+            <span class="pink">
+                ve güzel bir iz bırakır.
             </span>
 
         </h2>
 
-        <p class="section-text reveal">
+        <p class="description reveal">
 
-            Bu sayfanın aslında çok büyük bir amacı yok.
-            Sadece doğum gününde sana uzaktan da olsa
+            Bu sayfanın çok büyük bir amacı yok.
+            Sadece doğum gününde sana uzaktan
             küçük bir gülümseme bırakmak istedim.
 
         </p>
@@ -1367,17 +1159,13 @@ section {
 </section>
 
 
-<!-- =====================================================
-     LETTER
-===================================================== -->
+<section>
 
-<section class="section letter-section">
+    <div class="inner">
 
-    <div class="section-inner">
+        <div class="letter reveal">
 
-        <div class="letter-card reveal">
-
-            <div class="letter-top">
+            <div class="letterTop">
 
                 <span>
                     KÜÇÜK BİR NOT
@@ -1389,7 +1177,7 @@ section {
 
             </div>
 
-            <div class="letter-text">
+            <div class="letterText">
 
                 Bazen bir insanı tanımak için
                 yıllar gerekmez.
@@ -1397,22 +1185,20 @@ section {
                 <br><br>
 
                 Bazen birkaç konuşma bile
-                o insanın hayatındaki yerini
-                değiştirebilir.
+                yeterlidir.
 
                 <br><br>
 
                 Ve sen...
+
                 <span class="pink">
-                    benim için böyle insanlardan biri oldun.
+                    benim için özel birisin.
                 </span>
 
             </div>
 
             <div class="signature">
-
                 — Yusuf
-
             </div>
 
         </div>
@@ -1422,39 +1208,28 @@ section {
 </section>
 
 
-<!-- =====================================================
-     MEMORIES
-===================================================== -->
+<section>
 
-<section class="section">
+    <div class="inner">
 
-    <div class="section-inner">
-
-        <div class="section-label reveal">
+        <div class="label reveal">
             02 / KÜÇÜK ŞEYLER
         </div>
 
-        <h2 class="section-title reveal">
+        <h2 class="title reveal">
 
-            En güzel şeyler
-            bazen <span class="accent">küçük</span> olur.
+            Bazı şeyler
+            <span class="pink">
+                küçükken güzeldir.
+            </span>
 
         </h2>
 
-        <p class="section-text reveal">
+        <div class="memoryGrid">
 
-            Büyük sözler söylemek yerine,
-            aklımda kalan küçük şeyleri
-            hatırlamak bana daha güzel geliyor.
+            <div class="memory reveal">
 
-        </p>
-
-
-        <div class="memory-grid">
-
-            <article class="memory reveal">
-
-                <div class="memory-number">
+                <div class="memoryNumber">
                     01
                 </div>
 
@@ -1463,16 +1238,15 @@ section {
                 </h3>
 
                 <p>
-                    Bazen ciddi bir konuşmanın ortasında
-                    bile saçma bir şey bulup gülebilmek.
+                    Bazen en güzel anlar
+                    planlanmadan oluşur.
                 </p>
 
-            </article>
+            </div>
 
+            <div class="memory reveal">
 
-            <article class="memory reveal">
-
-                <div class="memory-number">
+                <div class="memoryNumber">
                     02
                 </div>
 
@@ -1481,30 +1255,28 @@ section {
                 </h3>
 
                 <p>
-                    Konunun nereden başlayıp
-                    nereye geldiğini anlamadan
-                    saatlerce konuşabilmek.
+                    Konuşurken zamanın
+                    nasıl geçtiğini anlamamak.
                 </p>
 
-            </article>
+            </div>
 
+            <div class="memory reveal">
 
-            <article class="memory reveal">
-
-                <div class="memory-number">
+                <div class="memoryNumber">
                     03
                 </div>
 
                 <h3>
-                    Uzaklık
+                    Mesafeler
                 </h3>
 
                 <p>
-                    Bazen arada kilometreler olsa bile
-                    bir insanı yakın hissedebilmek.
+                    Kilometrelerin bazı insanları
+                    gerçekten uzaklaştırmaması.
                 </p>
 
-            </article>
+            </div>
 
         </div>
 
@@ -1513,89 +1285,78 @@ section {
 </section>
 
 
-<!-- =====================================================
-     COUNTDOWN
-===================================================== -->
+<section>
 
-<section class="section countdown-section">
+    <div class="inner center">
 
-    <div class="section-inner">
-
-        <div class="section-label reveal">
-            03 / BEKLENEN GÜN
+        <div class="label reveal">
+            03 / 04 KASIM
         </div>
 
-        <h2 class="section-title reveal">
+        <h2 class="title reveal">
             O güne kadar...
         </h2>
 
-        <p class="section-text reveal"
-           style="margin-left:auto;margin-right:auto;">
-
+        <p class="description reveal">
             Takvimde sadece bir gün.
-            Ama bugün benim için biraz daha özel.
-
+            Ama benim için biraz daha özel.
         </p>
-
 
         <div
             class="countdown reveal"
             id="countdown">
 
-            <div class="time-box">
+            <div class="time">
 
                 <div
-                    class="time-number"
+                    class="number"
                     id="days">
                     00
                 </div>
 
-                <div class="time-label">
+                <div class="unit">
                     Gün
                 </div>
 
             </div>
 
-
-            <div class="time-box">
+            <div class="time">
 
                 <div
-                    class="time-number"
+                    class="number"
                     id="hours">
                     00
                 </div>
 
-                <div class="time-label">
+                <div class="unit">
                     Saat
                 </div>
 
             </div>
 
-
-            <div class="time-box">
+            <div class="time">
 
                 <div
-                    class="time-number"
+                    class="number"
                     id="minutes">
                     00
                 </div>
 
-                <div class="time-label">
+                <div class="unit">
                     Dakika
                 </div>
 
             </div>
 
-
-            <div class="time-box">
+            <div class="time">
 
                 <div
-                    class="time-number"
+                    class="number"
                     id="seconds">
                     00
                 </div>
 
-                <div class="time-label">
+                <div class="unit">
                     Saniye
                 </div>
 
@@ -1608,45 +1369,36 @@ section {
 </section>
 
 
-<!-- =====================================================
-     GIFT
-===================================================== -->
+<section>
 
-<section class="section gift-section">
+    <div class="inner giftArea">
 
-    <div class="section-inner">
-
-        <div class="section-label reveal">
+        <div class="label reveal">
             04 / SÜRPRİZ
         </div>
 
-        <h2 class="section-title reveal">
+        <h2 class="title reveal">
             Sana bir şey bıraktım.
         </h2>
 
-        <p class="section-text reveal"
-           style="margin-left:auto;margin-right:auto;">
-
+        <p class="description reveal">
             Açmak için kutuya dokun.
-
         </p>
-
 
         <div
             class="gift reveal"
             id="gift">
 
-            <div class="gift-lid"></div>
+            <div class="giftLid"></div>
 
-            <div class="gift-box"></div>
+            <div class="giftBox"></div>
 
-            <div class="gift-ribbon"></div>
+            <div class="ribbon"></div>
 
         </div>
 
-
         <div
-            class="gift-message"
+            class="giftMessage"
             id="giftMessage">
 
             <h3>
@@ -1654,12 +1406,9 @@ section {
             </h3>
 
             <p>
-
-                Umarım yeni yaşın sana
-                bolca mutluluk, güzel insanlar,
-                güzel anılar ve unutamayacağın
-                günler getirir.
-
+                Yeni yaşının çok güzel geçmesini
+                ve yüzünden gülümsemenin
+                hiç eksik olmamasını dilerim.
             </p>
 
         </div>
@@ -1669,44 +1418,36 @@ section {
 </section>
 
 
-<!-- =====================================================
-     FINAL
-===================================================== -->
+<section class="final">
 
-<section class="final-section">
+    <div class="inner reveal">
 
-    <div class="reveal">
-
-        <div class="final-heart">
+        <div class="finalHeart">
             ♥
         </div>
 
-        <div class="final-title">
+        <div class="finalTitle">
             İyi ki<br>
             doğdun.
         </div>
 
-        <p class="final-text">
+        <p class="finalText">
 
-            Bu sayfayı belki birkaç dakika içinde
-            gezip kapatacaksın.
-
-            <br><br>
-
-            Ama ben bunu hazırlarken
-            yüzünde nasıl bir gülümseme
-            olacağını düşünerek yaptım.
+            Bu sayfayı hazırlarken
+            tek düşündüğüm şey,
+            bunu gördüğünde
+            yüzünde küçük bir gülümseme
+            oluşmasıydı.
 
             <br><br>
 
-            Umarım güzel bir yaşın olur.
+            Umarım yeni yaşın
+            çok güzel olur.
 
         </p>
 
-        <div class="final-signature">
-
-            — Yusuf
-
+        <div class="signatureFinal">
+            — YUSUF
         </div>
 
     </div>
@@ -1716,156 +1457,139 @@ section {
 </main>
 
 
-<!-- =====================================================
-     SECRET
-===================================================== -->
-
 <div
-    class="secret"
+    class="secretDot"
     id="secret">
 </div>
 
 
 <div
-    class="secret-message"
-    id="secretMessage">
+    class="secretBox"
+    id="secretBox">
 
-    <h3>
-        Gizli bir yer buldun. 👀
-    </h3>
+    <div class="secretCard">
 
-    <p>
+        <h3>
+            Gizli bir yer buldun. 👀
+        </h3>
 
-        Buraya kadar geldiysen
-        gerçekten meraklısın. 😂
+        <p>
+            Buraya kadar geldiysen
+            gerçekten meraklısın. 😂
+            <br><br>
+            Bu küçük sır sadece sana.
+        </p>
 
-        <br><br>
+        <button
+            class="close"
+            id="close">
+            Kapat
+        </button>
 
-        Neyse...
-        Bunu da sadece sen gördün.
-
-    </p>
-
-    <button
-        class="close-secret"
-        id="closeSecret">
-
-        Kapat
-
-    </button>
+    </div>
 
 </div>
 
 
-<!-- =====================================================
-     JAVASCRIPT
-===================================================== -->
-
 <script>
 
-/* =========================================================
-   LOADER
-========================================================= */
+/* LOADER */
 
 const loader =
     document.getElementById("loader");
 
-const loaderProgress =
-    document.getElementById("loaderProgress");
+const progress =
+    document.getElementById("progress");
 
-const loaderStatus =
-    document.getElementById("loaderStatus");
+const status =
+    document.getElementById("status");
 
-const loadingTexts = [
+const texts = [
     "Başlatılıyor...",
-    "Küçük bir şey hazırlanıyor...",
-    "Yıldızlar yükleniyor...",
+    "Yıldızlar hazırlanıyor...",
     "Kalpler hazırlanıyor...",
     "Son dokunuşlar...",
     "Hazır."
 ];
 
-let loadingProgress = 0;
+let value = 0;
 
-const loadingInterval =
+const loaderTimer =
     setInterval(() => {
 
-        loadingProgress +=
-            Math.random() * 12;
+        value +=
+            Math.random() * 13;
 
-        if (loadingProgress >= 100) {
+        if(value >= 100){
 
-            loadingProgress = 100;
+            value = 100;
 
             clearInterval(
-                loadingInterval
+                loaderTimer
             );
 
-            loaderProgress.style.width =
+            progress.style.width =
                 "100%";
 
-            loaderStatus.textContent =
+            status.textContent =
                 "Hazır.";
 
             setTimeout(() => {
 
                 loader.classList.add(
-                    "hidden"
+                    "hide"
                 );
 
                 document
                     .getElementById("nav")
                     .classList.add(
-                        "visible"
+                        "show"
                     );
 
-            }, 700);
+            },600);
 
-        } else {
+        }else{
 
-            loaderProgress.style.width =
-                loadingProgress + "%";
+            progress.style.width =
+                value + "%";
 
             const index =
                 Math.min(
-                    loadingTexts.length - 1,
+                    texts.length - 1,
                     Math.floor(
-                        loadingProgress /
-                        18
+                        value / 20
                     )
                 );
 
-            loaderStatus.textContent =
-                loadingTexts[index];
+            status.textContent =
+                texts[index];
 
         }
 
-    }, 180);
+    },170);
 
 
-/* =========================================================
-   STARS
-========================================================= */
+/* STARS */
 
-const starCanvas =
+const canvas =
     document.getElementById("stars");
 
-const starCtx =
-    starCanvas.getContext("2d");
+const ctx =
+    canvas.getContext("2d");
 
 let stars = [];
 
-function resizeStars() {
+function resize(){
 
-    starCanvas.width =
-        window.innerWidth *
+    canvas.width =
+        innerWidth *
         devicePixelRatio;
 
-    starCanvas.height =
-        window.innerHeight *
+    canvas.height =
+        innerHeight *
         devicePixelRatio;
 
-    starCtx.setTransform(
+    ctx.setTransform(
         devicePixelRatio,
         0,
         0,
@@ -1874,58 +1598,36 @@ function resizeStars() {
         0
     );
 
-    createStars();
-}
-
-function createStars() {
-
     stars = [];
 
     const count =
-        Math.min(
-            260,
-            Math.floor(
-                window.innerWidth *
-                window.innerHeight /
-                6500
-            )
-        );
+        innerWidth < 600
+        ? 100
+        : 200;
 
-    for (
-        let i = 0;
-        i < count;
-        i++
-    ) {
+    for(let i=0;i<count;i++){
 
         stars.push({
 
             x:
                 Math.random() *
-                window.innerWidth,
+                innerWidth,
 
             y:
                 Math.random() *
-                window.innerHeight,
+                innerHeight,
 
-            radius:
+            r:
                 Math.random() *
-                1.5 +
-                .2,
+                1.2+.2,
 
-            alpha:
+            a:
                 Math.random() *
-                .7 +
-                .2,
+                .7+.2,
 
-            speed:
+            p:
                 Math.random() *
-                .02 +
-                .005,
-
-            phase:
-                Math.random() *
-                Math.PI *
-                2
+                Math.PI*2
 
         });
 
@@ -1933,240 +1635,82 @@ function createStars() {
 
 }
 
-function drawStars(time) {
+function animateStars(time){
 
-    starCtx.clearRect(
+    ctx.clearRect(
         0,
         0,
-        window.innerWidth,
-        window.innerHeight
+        innerWidth,
+        innerHeight
     );
 
-    for (const star of stars) {
+    for(const s of stars){
 
-        const twinkle =
+        const alpha =
+            s.a +
             Math.sin(
-                time *
-                star.speed +
-                star.phase
-            ) *
-            .25;
+                time*.001+s.p
+            )*.2;
 
-        starCtx.beginPath();
+        ctx.beginPath();
 
-        starCtx.arc(
-            star.x,
-            star.y,
-            star.radius,
+        ctx.arc(
+            s.x,
+            s.y,
+            s.r,
             0,
-            Math.PI * 2
+            Math.PI*2
         );
 
-        starCtx.fillStyle =
+        ctx.fillStyle =
             `rgba(255,255,255,${
-                Math.max(
-                    .05,
-                    star.alpha +
-                    twinkle
-                )
+                Math.max(.05,alpha)
             })`;
 
-        starCtx.fill();
-
-    }
-
-    requestAnimationFrame(drawStars);
-}
-
-window.addEventListener(
-    "resize",
-    resizeStars
-);
-
-resizeStars();
-
-requestAnimationFrame(
-    drawStars
-);
-
-
-/* =========================================================
-   PARTICLE TOUCH EFFECT
-========================================================= */
-
-const particleCanvas =
-    document.getElementById("particles");
-
-const particleCtx =
-    particleCanvas.getContext("2d");
-
-let particles = [];
-
-function resizeParticles() {
-
-    particleCanvas.width =
-        window.innerWidth *
-        devicePixelRatio;
-
-    particleCanvas.height =
-        window.innerHeight *
-        devicePixelRatio;
-
-    particleCtx.setTransform(
-        devicePixelRatio,
-        0,
-        0,
-        devicePixelRatio,
-        0,
-        0
-    );
-
-}
-
-resizeParticles();
-
-window.addEventListener(
-    "resize",
-    resizeParticles
-);
-
-function createParticle(
-    x,
-    y
-) {
-
-    particles.push({
-
-        x,
-        y,
-
-        vx:
-            (Math.random() - .5)
-            * 2.5,
-
-        vy:
-            (Math.random() - .5)
-            * 2.5,
-
-        size:
-            Math.random() * 4 + 1,
-
-        life:
-            1,
-
-        decay:
-            Math.random() * .025
-            + .015
-
-    });
-
-}
-
-function particleLoop() {
-
-    particleCtx.clearRect(
-        0,
-        0,
-        window.innerWidth,
-        window.innerHeight
-    );
-
-    particles =
-        particles.filter(
-            particle => {
-                return particle.life > 0;
-            }
-        );
-
-    for (const particle of particles) {
-
-        particle.x += particle.vx;
-
-        particle.y += particle.vy;
-
-        particle.life -=
-            particle.decay;
-
-        particleCtx.beginPath();
-
-        particleCtx.arc(
-            particle.x,
-            particle.y,
-            particle.size,
-            0,
-            Math.PI * 2
-        );
-
-        particleCtx.fillStyle =
-            `rgba(255,159,197,${
-                particle.life
-            })`;
-
-        particleCtx.fill();
+        ctx.fill();
 
     }
 
     requestAnimationFrame(
-        particleLoop
+        animateStars
     );
 
 }
 
-particleLoop();
+resize();
+
+addEventListener(
+    "resize",
+    resize
+);
+
+requestAnimationFrame(
+    animateStars
+);
 
 
-window.addEventListener(
-    "pointermove",
-    event => {
+/* START */
 
-        if (
-            Math.random() >
-            .55
-        ) {
+document
+    .getElementById("start")
+    .addEventListener(
+        "click",
+        () => {
 
-            createParticle(
-                event.clientX,
-                event.clientY
-            );
+            scrollTo({
+                top:
+                    innerHeight,
+                behavior:
+                    "smooth"
+            });
 
         }
-
-    }
-);
-
-
-/* =========================================================
-   START BUTTON
-========================================================= */
-
-const startButton =
-    document.getElementById(
-        "startButton"
     );
 
-startButton.addEventListener(
-    "click",
-    () => {
 
-        window.scrollTo({
+/* REVEAL */
 
-            top:
-                window.innerHeight,
-
-            behavior:
-                "smooth"
-
-        });
-
-    }
-);
-
-
-/* =========================================================
-   SCROLL REVEAL
-========================================================= */
-
-const revealElements =
+const reveals =
     document.querySelectorAll(
         ".reveal"
     );
@@ -2178,13 +1722,13 @@ const observer =
             entries.forEach(
                 entry => {
 
-                    if (
+                    if(
                         entry.isIntersecting
-                    ) {
+                    ){
 
                         entry.target
                             .classList
-                            .add("show");
+                            .add("active");
 
                     }
 
@@ -2193,32 +1737,26 @@ const observer =
 
         },
         {
-            threshold: .15
+            threshold:.12
         }
     );
 
-revealElements.forEach(
-    element => {
-        observer.observe(element);
-    }
+reveals.forEach(
+    item =>
+        observer.observe(item)
 );
 
 
-/* =========================================================
-   COUNTDOWN
-========================================================= */
+/* COUNTDOWN */
 
-function updateCountdown() {
+function countdown(){
 
     const now =
         new Date();
 
-    let year =
-        now.getFullYear();
-
-    let birthday =
+    let target =
         new Date(
-            year,
+            now.getFullYear(),
             10,
             4,
             0,
@@ -2226,13 +1764,11 @@ function updateCountdown() {
             0
         );
 
-    if (
-        now > birthday
-    ) {
+    if(now > target){
 
-        birthday =
+        target =
             new Date(
-                year + 1,
+                now.getFullYear()+1,
                 10,
                 4,
                 0,
@@ -2242,78 +1778,64 @@ function updateCountdown() {
 
     }
 
-    const difference =
-        birthday.getTime()
-        -
-        now.getTime();
+    const diff =
+        target-now;
 
-    const days =
+    const d =
         Math.floor(
-            difference /
-            (1000 * 60 * 60 * 24)
+            diff /
+            86400000
         );
 
-    const hours =
+    const h =
         Math.floor(
-            (
-                difference /
-                (1000 * 60 * 60)
-            ) % 24
-        );
+            diff /
+            3600000
+        )%24;
 
-    const minutes =
+    const m =
         Math.floor(
-            (
-                difference /
-                (1000 * 60)
-            ) % 60
-        );
+            diff /
+            60000
+        )%60;
 
-    const seconds =
+    const s =
         Math.floor(
-            (
-                difference /
-                1000
-            ) % 60
-        );
+            diff /
+            1000
+        )%60;
 
     document.getElementById(
         "days"
     ).textContent =
-        String(days)
-            .padStart(2,"0");
+        String(d).padStart(2,"0");
 
     document.getElementById(
         "hours"
     ).textContent =
-        String(hours)
-            .padStart(2,"0");
+        String(h).padStart(2,"0");
 
     document.getElementById(
         "minutes"
     ).textContent =
-        String(minutes)
-            .padStart(2,"0");
+        String(m).padStart(2,"0");
 
     document.getElementById(
         "seconds"
     ).textContent =
-        String(seconds)
-            .padStart(2,"0");
+        String(s).padStart(2,"0");
 
 }
 
-updateCountdown();
+countdown();
 
 setInterval(
-    updateCountdown,
+    countdown,
     1000
 );
 
 
-/* =========================================================
-   GIFT
-========================================================= */
+/* GIFT */
 
 const gift =
     document.getElementById(
@@ -2325,16 +1847,16 @@ const giftMessage =
         "giftMessage"
     );
 
-let giftOpened = false;
+let opened = false;
 
 gift.addEventListener(
     "click",
     () => {
 
-        if (giftOpened)
+        if(opened)
             return;
 
-        giftOpened = true;
+        opened = true;
 
         gift.classList.add(
             "open"
@@ -2343,91 +1865,74 @@ gift.addEventListener(
         setTimeout(
             () => {
 
-                giftMessage.classList.add(
-                    "show"
-                );
+                giftMessage
+                    .classList
+                    .add("show");
 
-                launchConfetti();
+                confetti();
 
             },
-            500
+            450
         );
 
     }
 );
 
 
-/* =========================================================
-   CONFETTI
-========================================================= */
+/* CONFETTI */
 
-function launchConfetti() {
+function confetti(){
 
-    const amount = 90;
-
-    for (
-        let i = 0;
-        i < amount;
+    for(
+        let i=0;
+        i<80;
         i++
-    ) {
+    ){
 
-        const piece =
+        const el =
             document.createElement(
                 "div"
             );
 
-        piece.className =
+        el.className =
             "confetti";
 
-        const x =
-            (
-                Math.random() *
-                100
-            ) + "vw";
+        el.style.left =
+            Math.random()*100+
+            "vw";
 
-        const duration =
-            (
-                Math.random() *
-                3 +
-                2
-            ) + "s";
-
-        piece.style.left =
-            x;
-
-        piece.style.setProperty(
-            "--x",
-            (
-                Math.random() *
-                250 -
-                125
-            ) + "px"
-        );
-
-        piece.style.animationDuration =
-            duration;
-
-        piece.style.background =
+        el.style.background =
             [
                 "#ff5f9e",
-                "#ffb5d5",
+                "#ffb4d4",
                 "#9b7cff",
                 "#6ca8ff",
                 "#ffffff"
             ][
                 Math.floor(
-                    Math.random() * 5
+                    Math.random()*5
                 )
             ];
 
+        el.style.animationDuration =
+            2+
+            Math.random()*3+
+            "s";
+
+        el.style.setProperty(
+            "--moveX",
+            (
+                Math.random()*200-
+                100
+            )+"px"
+        );
+
         document.body.appendChild(
-            piece
+            el
         );
 
         setTimeout(
-            () => {
-                piece.remove();
-            },
+            () => el.remove(),
             5500
         );
 
@@ -2436,41 +1941,96 @@ function launchConfetti() {
 }
 
 
-/* =========================================================
-   SECRET
-========================================================= */
+/* TOUCH HEART */
+
+function heart(x,y){
+
+    const h =
+        document.createElement(
+            "div"
+        );
+
+    h.className =
+        "touchHeart";
+
+    h.textContent =
+        Math.random()>.25
+        ? "♥"
+        : "♡";
+
+    h.style.left =
+        x+"px";
+
+    h.style.top =
+        y+"px";
+
+    h.style.color =
+        Math.random()>.5
+        ? "#ff8fbc"
+        : "#a994ff";
+
+    document.body.appendChild(h);
+
+    setTimeout(
+        () => h.remove(),
+        1100
+    );
+
+}
+
+document.addEventListener(
+    "pointerdown",
+    event => {
+
+        if(
+            event.target.closest(
+                "button"
+            )
+        )
+            return;
+
+        heart(
+            event.clientX,
+            event.clientY
+        );
+
+    }
+);
+
+
+/* SECRET */
 
 const secret =
     document.getElementById(
         "secret"
     );
 
-const secretMessage =
+const secretBox =
     document.getElementById(
-        "secretMessage"
+        "secretBox"
     );
 
-const closeSecret =
+const close =
     document.getElementById(
-        "closeSecret"
+        "close"
     );
 
 secret.addEventListener(
     "click",
     () => {
 
-        secretMessage.classList.add(
+        secretBox.classList.add(
             "show"
         );
 
     }
 );
 
-closeSecret.addEventListener(
+close.addEventListener(
     "click",
     () => {
 
-        secretMessage.classList.remove(
+        secretBox.classList.remove(
             "show"
         );
 
@@ -2478,120 +2038,20 @@ closeSecret.addEventListener(
 );
 
 
-/* =========================================================
-   KEYBOARD EASTER EGG
-========================================================= */
+/* MUSIC */
 
-let keySequence = "";
+let audio = null;
 
-const secretCode =
-    "emine";
-
-window.addEventListener(
-    "keydown",
-    event => {
-
-        keySequence +=
-            event.key.toLowerCase();
-
-        if (
-            keySequence.length >
-            secretCode.length
-        ) {
-
-            keySequence =
-                keySequence.slice(
-                    -secretCode.length
-                );
-
-        }
-
-        if (
-            keySequence ===
-            secretCode
-        ) {
-
-            launchConfetti();
-
-            keySequence = "";
-
-        }
-
-    }
-);
-
-
-/* =========================================================
-   MOUSE PARALLAX
-========================================================= */
-
-let mouseX = 0;
-let mouseY = 0;
-
-window.addEventListener(
-    "pointermove",
-    event => {
-
-        mouseX =
-            (
-                event.clientX /
-                window.innerWidth -
-                .5
-            );
-
-        mouseY =
-            (
-                event.clientY /
-                window.innerHeight -
-                .5
-            );
-
-        const glows =
-            document.querySelectorAll(
-                ".glow"
-            );
-
-        glows.forEach(
-            (
-                glow,
-                index
-            ) => {
-
-                const amount =
-                    (
-                        index + 1
-                    ) * 12;
-
-                glow.style.transform =
-                    `translate(
-                        ${mouseX * amount}px,
-                        ${mouseY * amount}px
-                    )`;
-
-            }
-        );
-
-    }
-);
-
-
-/* =========================================================
-   MUSIC SYSTEM
-========================================================= */
-
-let audio =
-    null;
-
-const musicButton =
+const music =
     document.getElementById(
-        "musicButton"
+        "music"
     );
 
-musicButton.addEventListener(
+music.addEventListener(
     "click",
     () => {
 
-        if (!audio) {
+        if(!audio){
 
             audio =
                 new Audio(
@@ -2602,30 +2062,28 @@ musicButton.addEventListener(
 
         }
 
-        if (
-            audio.paused
-        ) {
+        if(audio.paused){
 
             audio.play()
                 .then(() => {
 
-                    musicButton.textContent =
-                        "❚❚";
+                    music.textContent =
+                        "Ⅱ";
 
                 })
                 .catch(() => {
 
                     alert(
-                        "Önce music.mp3 dosyasını siteye ekle."
+                        "music.mp3 dosyasını GitHub'a eklemelisin."
                     );
 
                 });
 
-        } else {
+        }else{
 
             audio.pause();
 
-            musicButton.textContent =
+            music.textContent =
                 "♫";
 
         }
@@ -2634,65 +2092,31 @@ musicButton.addEventListener(
 );
 
 
-/* =========================================================
-   DOUBLE CLICK HEART
-========================================================= */
+/* EASTER EGG */
 
-document.addEventListener(
-    "dblclick",
-    event => {
+let typed = "";
 
-        for (
-            let i = 0;
-            i < 10;
-            i++
-        ) {
+window.addEventListener(
+    "keydown",
+    e => {
 
-            createParticle(
-                event.clientX,
-                event.clientY
-            );
+        typed +=
+            e.key.toLowerCase();
 
-        }
+        typed =
+            typed.slice(-5);
 
-    }
-);
+        if(
+            typed === "emine"
+        ){
 
+            confetti();
 
-/* =========================================================
-   VISIBILITY
-========================================================= */
-
-document.addEventListener(
-    "visibilitychange",
-    () => {
-
-        if (
-            document.hidden &&
-            audio &&
-            !audio.paused
-        ) {
-
-            audio.pause();
+            typed = "";
 
         }
 
     }
-);
-
-
-/* =========================================================
-   CONSOLE MESSAGE
-========================================================= */
-
-console.log(
-    "%c❤️ Emine için hazırlanmış özel bir site.",
-    "font-size:18px;color:#ff9fc5;"
-);
-
-console.log(
-    "%cBuraya kadar geldiysen geliştirici moduna girdin. 👀",
-    "font-size:13px;color:#9b7cff;"
 );
 
 </script>
