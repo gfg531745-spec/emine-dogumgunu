@@ -1,87 +1,2701 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#050509">
 
-    <title>Emine ❤️</title>
+<title>Emine — Senin İçin ❤️</title>
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<style>
+/* =========================================================
+   RESET
+========================================================= */
 
-        body {
-            min-height: 100vh;
-            background: #050505;
-            color: white;
-            font-family: Arial, sans-serif;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-            display: flex;
-            justify-content: center;
-            align-items: center;
+html {
+    scroll-behavior: smooth;
+}
 
-            overflow: hidden;
-        }
+body {
+    background: #030305;
+    color: #ffffff;
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Arial,
+        sans-serif;
+    overflow-x: hidden;
+}
 
-        .container {
-            text-align: center;
-            padding: 30px;
-        }
+button {
+    font: inherit;
+}
 
-        .small {
-            color: #888;
-            font-size: 15px;
-            margin-bottom: 20px;
-            letter-spacing: 2px;
-        }
+a {
+    color: inherit;
+    text-decoration: none;
+}
 
-        h1 {
-            font-size: clamp(45px, 10vw, 80px);
-            margin-bottom: 20px;
-            font-weight: 600;
-        }
 
-        p {
-            color: #aaa;
-            font-size: 19px;
-        }
+/* =========================================================
+   VARIABLES
+========================================================= */
 
-        .heart {
-            margin-top: 30px;
-            font-size: 35px;
-            animation: heartbeat 1.5s infinite;
-        }
+:root {
+    --bg: #030305;
+    --bg2: #080810;
+    --text: #ffffff;
+    --muted: rgba(255,255,255,.62);
+    --soft: rgba(255,255,255,.08);
+    --line: rgba(255,255,255,.12);
 
-        @keyframes heartbeat {
-            0%, 100% {
-                transform: scale(1);
-            }
+    --pink: #ff5f9e;
+    --pink2: #ff9fc5;
+    --purple: #9b7cff;
+    --blue: #6ca8ff;
 
-            50% {
-                transform: scale(1.2);
-            }
-        }
-    </style>
+    --radius: 28px;
+}
+
+
+/* =========================================================
+   SCROLLBAR
+========================================================= */
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #030305;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,.18);
+    border-radius: 20px;
+}
+
+
+/* =========================================================
+   LOADING SCREEN
+========================================================= */
+
+#loader {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background:
+        radial-gradient(
+            circle at center,
+            #171321 0%,
+            #07060b 40%,
+            #020204 100%
+        );
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transition:
+        opacity 1s ease,
+        visibility 1s ease;
+}
+
+#loader.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.loader-content {
+    width: min(520px, 85vw);
+}
+
+.loader-top {
+    color: rgba(255,255,255,.45);
+    font-size: 11px;
+    letter-spacing: 4px;
+    margin-bottom: 20px;
+}
+
+.loader-title {
+    font-size: clamp(28px, 6vw, 52px);
+    font-weight: 300;
+    letter-spacing: -2px;
+    margin-bottom: 30px;
+}
+
+.loader-title span {
+    color: var(--pink2);
+}
+
+.loader-bar {
+    width: 100%;
+    height: 2px;
+    background: rgba(255,255,255,.1);
+    overflow: hidden;
+}
+
+.loader-progress {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        var(--purple),
+        var(--pink)
+    );
+    transition: width .15s linear;
+}
+
+.loader-status {
+    margin-top: 15px;
+    color: rgba(255,255,255,.4);
+    font-size: 12px;
+    letter-spacing: 1px;
+}
+
+
+/* =========================================================
+   CANVAS
+========================================================= */
+
+#stars {
+    position: fixed;
+    inset: 0;
+    z-index: -5;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+#particles {
+    position: fixed;
+    inset: 0;
+    z-index: 20;
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   AMBIENT BACKGROUND
+========================================================= */
+
+.ambient {
+    position: fixed;
+    inset: 0;
+    z-index: -4;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px);
+    opacity: .18;
+    animation: floatGlow 12s ease-in-out infinite;
+}
+
+.glow.one {
+    width: 380px;
+    height: 380px;
+    background: #8c4dff;
+    left: -120px;
+    top: 15%;
+}
+
+.glow.two {
+    width: 320px;
+    height: 320px;
+    background: #ff3f91;
+    right: -100px;
+    top: 50%;
+    animation-delay: -5s;
+}
+
+.glow.three {
+    width: 280px;
+    height: 280px;
+    background: #3d7cff;
+    left: 35%;
+    bottom: -100px;
+    animation-delay: -8s;
+}
+
+@keyframes floatGlow {
+    0%,100% {
+        transform: translate3d(0,0,0) scale(1);
+    }
+
+    50% {
+        transform: translate3d(30px,-40px,0) scale(1.15);
+    }
+}
+
+
+/* =========================================================
+   TOP NAV
+========================================================= */
+
+.nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+
+    padding: 22px 5vw;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    pointer-events: none;
+
+    opacity: 0;
+    transform: translateY(-20px);
+
+    transition:
+        opacity 1s ease,
+        transform 1s ease;
+}
+
+.nav.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.logo {
+    pointer-events: auto;
+    font-size: 14px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.75);
+}
+
+.logo span {
+    color: var(--pink2);
+}
+
+.music-button {
+    pointer-events: auto;
+
+    width: 44px;
+    height: 44px;
+
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,.16);
+
+    background: rgba(255,255,255,.06);
+    color: white;
+
+    cursor: pointer;
+
+    backdrop-filter: blur(15px);
+
+    transition:
+        transform .3s ease,
+        background .3s ease;
+}
+
+.music-button:hover {
+    transform: scale(1.08);
+    background: rgba(255,255,255,.12);
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero {
+    min-height: 100svh;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    position: relative;
+
+    padding: 100px 20px 80px;
+}
+
+.hero-inner {
+    text-align: center;
+    max-width: 1000px;
+}
+
+.eyebrow {
+    font-size: 11px;
+    letter-spacing: 5px;
+    color: rgba(255,255,255,.42);
+    text-transform: uppercase;
+
+    opacity: 0;
+    transform: translateY(20px);
+
+    animation: heroUp 1s 2s forwards;
+}
+
+.hero-name {
+    margin-top: 20px;
+
+    font-size: clamp(
+        72px,
+        17vw,
+        190px
+    );
+
+    line-height: .85;
+
+    font-weight: 200;
+
+    letter-spacing: -8px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ffffff 20%,
+            #ffb5d5 48%,
+            #9e8bff 85%
+        );
+
+    -webkit-background-clip: text;
+    background-clip: text;
+
+    color: transparent;
+
+    opacity: 0;
+    transform: scale(.94);
+
+    animation: heroName 1.6s 2.1s forwards;
+}
+
+.hero-subtitle {
+    margin-top: 35px;
+
+    color: var(--muted);
+
+    font-size: clamp(
+        17px,
+        3vw,
+        23px
+    );
+
+    font-weight: 300;
+
+    opacity: 0;
+
+    animation: heroUp 1s 2.7s forwards;
+}
+
+.hero-button {
+    margin-top: 45px;
+
+    border: 1px solid rgba(255,255,255,.18);
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,255,255,.12),
+            rgba(255,255,255,.04)
+        );
+
+    color: white;
+
+    padding: 16px 30px;
+
+    border-radius: 999px;
+
+    cursor: pointer;
+
+    backdrop-filter: blur(20px);
+
+    opacity: 0;
+
+    animation: heroUp 1s 3.1s forwards;
+
+    transition:
+        transform .3s ease,
+        background .3s ease,
+        border-color .3s ease;
+}
+
+.hero-button:hover {
+    transform: translateY(-4px);
+    background: rgba(255,255,255,.13);
+    border-color: rgba(255,255,255,.3);
+}
+
+.hero-button span {
+    margin-left: 10px;
+    color: var(--pink2);
+}
+
+.scroll-hint {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    color: rgba(255,255,255,.28);
+
+    font-size: 10px;
+    letter-spacing: 3px;
+
+    animation: scrollPulse 2s infinite;
+}
+
+@keyframes scrollPulse {
+    0%,100% {
+        opacity: .25;
+        transform: translate(-50%,0);
+    }
+
+    50% {
+        opacity: .7;
+        transform: translate(-50%,8px);
+    }
+}
+
+@keyframes heroUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes heroName {
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+
+/* =========================================================
+   SECTIONS
+========================================================= */
+
+section {
+    position: relative;
+}
+
+.section {
+    min-height: 100svh;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding:
+        120px 7vw;
+}
+
+.section-inner {
+    width: min(1100px, 100%);
+}
+
+.section-label {
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: rgba(255,255,255,.35);
+    text-transform: uppercase;
+
+    margin-bottom: 20px;
+}
+
+.section-title {
+    font-size: clamp(
+        42px,
+        8vw,
+        88px
+    );
+
+    font-weight: 200;
+
+    letter-spacing: -4px;
+
+    line-height: .95;
+
+    max-width: 900px;
+}
+
+.section-title .accent {
+    color: var(--pink2);
+}
+
+.section-text {
+    max-width: 650px;
+
+    margin-top: 30px;
+
+    color: var(--muted);
+
+    font-size: 18px;
+
+    line-height: 1.9;
+}
+
+
+/* =========================================================
+   REVEAL
+========================================================= */
+
+.reveal {
+    opacity: 0;
+    transform: translateY(60px);
+
+    transition:
+        opacity 1s ease,
+        transform 1s cubic-bezier(.2,.7,.2,1);
+}
+
+.reveal.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+
+/* =========================================================
+   LETTER
+========================================================= */
+
+.letter-section {
+    min-height: 100svh;
+}
+
+.letter-card {
+    position: relative;
+
+    padding:
+        clamp(30px, 6vw, 70px);
+
+    border-radius: var(--radius);
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,255,255,.09),
+            rgba(255,255,255,.025)
+        );
+
+    border: 1px solid var(--line);
+
+    backdrop-filter: blur(25px);
+
+    box-shadow:
+        0 40px 100px rgba(0,0,0,.35);
+
+    overflow: hidden;
+}
+
+.letter-card::before {
+    content: "";
+
+    position: absolute;
+
+    width: 250px;
+    height: 250px;
+
+    border-radius: 50%;
+
+    background: var(--pink);
+
+    filter: blur(130px);
+
+    opacity: .12;
+
+    right: -100px;
+    top: -100px;
+}
+
+.letter-top {
+    display: flex;
+    justify-content: space-between;
+
+    color: rgba(255,255,255,.35);
+
+    font-size: 11px;
+    letter-spacing: 2px;
+
+    margin-bottom: 50px;
+}
+
+.letter-text {
+    font-size: clamp(
+        24px,
+        4vw,
+        42px
+    );
+
+    font-weight: 300;
+
+    line-height: 1.45;
+
+    letter-spacing: -1px;
+}
+
+.letter-text .pink {
+    color: var(--pink2);
+}
+
+.signature {
+    margin-top: 50px;
+
+    color: rgba(255,255,255,.45);
+
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   MEMORY GRID
+========================================================= */
+
+.memory-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 18px;
+
+    margin-top: 60px;
+}
+
+.memory {
+    min-height: 230px;
+
+    border: 1px solid var(--line);
+
+    border-radius: 24px;
+
+    padding: 28px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.08),
+            rgba(255,255,255,.025)
+        );
+
+    position: relative;
+
+    overflow: hidden;
+
+    transition:
+        transform .5s cubic-bezier(.2,.8,.2,1),
+        border-color .4s ease;
+}
+
+.memory:hover {
+    transform: translateY(-10px);
+    border-color: rgba(255,255,255,.25);
+}
+
+.memory-number {
+    color: rgba(255,255,255,.25);
+    font-size: 12px;
+}
+
+.memory h3 {
+    margin-top: 40px;
+
+    font-size: 25px;
+
+    font-weight: 400;
+}
+
+.memory p {
+    margin-top: 12px;
+
+    color: var(--muted);
+
+    line-height: 1.6;
+
+    font-size: 14px;
+}
+
+.memory::after {
+    content: "♡";
+
+    position: absolute;
+
+    right: 20px;
+    bottom: 5px;
+
+    font-size: 80px;
+
+    color: rgba(255,255,255,.025);
+}
+
+
+/* =========================================================
+   COUNTDOWN
+========================================================= */
+
+.countdown-section {
+    text-align: center;
+}
+
+.countdown {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 15px;
+
+    margin-top: 60px;
+
+    max-width: 850px;
+
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.time-box {
+    padding: 30px 15px;
+
+    border-radius: 22px;
+
+    background: rgba(255,255,255,.05);
+
+    border: 1px solid var(--line);
+
+    backdrop-filter: blur(15px);
+}
+
+.time-number {
+    font-size: clamp(
+        34px,
+        7vw,
+        65px
+    );
+
+    font-weight: 200;
+}
+
+.time-label {
+    margin-top: 8px;
+
+    color: rgba(255,255,255,.35);
+
+    font-size: 10px;
+
+    letter-spacing: 2px;
+
+    text-transform: uppercase;
+}
+
+
+/* =========================================================
+   GIFT
+========================================================= */
+
+.gift-section {
+    text-align: center;
+}
+
+.gift {
+    width: 180px;
+    height: 150px;
+
+    position: relative;
+
+    margin:
+        80px auto 30px;
+
+    cursor: pointer;
+
+    transition:
+        transform .4s ease;
+}
+
+.gift:hover {
+    transform: translateY(-8px) scale(1.04);
+}
+
+.gift-box {
+    position: absolute;
+
+    left: 15px;
+    right: 15px;
+    bottom: 0;
+
+    height: 110px;
+
+    border-radius: 8px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #d83277,
+            #ff6fa8
+        );
+
+    box-shadow:
+        0 30px 50px rgba(255,80,150,.18);
+}
+
+.gift-lid {
+    position: absolute;
+
+    left: 5px;
+    right: 5px;
+    top: 20px;
+
+    height: 35px;
+
+    border-radius: 7px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f24c91,
+            #ff8fba
+        );
+
+    z-index: 3;
+
+    transition:
+        transform .8s cubic-bezier(.2,.8,.2,1);
+}
+
+.gift-ribbon {
+    position: absolute;
+
+    top: 0;
+    bottom: 0;
+
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    width: 25px;
+
+    background: rgba(255,255,255,.55);
+
+    z-index: 4;
+}
+
+.gift.open .gift-lid {
+    transform:
+        translateY(-55px)
+        rotate(-8deg);
+}
+
+.gift-message {
+    max-width: 600px;
+
+    margin: 0 auto;
+
+    opacity: 0;
+
+    transform: translateY(20px);
+
+    transition:
+        opacity .8s ease,
+        transform .8s ease;
+
+    pointer-events: none;
+}
+
+.gift-message.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.gift-message h3 {
+    font-size: 32px;
+    font-weight: 300;
+}
+
+.gift-message p {
+    margin-top: 18px;
+    color: var(--muted);
+    line-height: 1.8;
+}
+
+
+/* =========================================================
+   FINAL
+========================================================= */
+
+.final-section {
+    min-height: 110svh;
+
+    text-align: center;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 100px 20px;
+}
+
+.final-heart {
+    font-size: 65px;
+
+    color: var(--pink2);
+
+    animation:
+        finalHeart 2s infinite;
+}
+
+@keyframes finalHeart {
+    0%,100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.15);
+    }
+}
+
+.final-title {
+    margin-top: 25px;
+
+    font-size: clamp(
+        55px,
+        12vw,
+        150px
+    );
+
+    line-height: .85;
+
+    font-weight: 200;
+
+    letter-spacing: -7px;
+
+    background:
+        linear-gradient(
+            135deg,
+            white,
+            #ff9fc5,
+            #a98cff
+        );
+
+    -webkit-background-clip: text;
+    background-clip: text;
+
+    color: transparent;
+}
+
+.final-text {
+    margin:
+        40px auto 0;
+
+    max-width: 650px;
+
+    color: var(--muted);
+
+    font-size: 18px;
+
+    line-height: 1.8;
+}
+
+.final-signature {
+    margin-top: 45px;
+
+    color: rgba(255,255,255,.4);
+
+    font-size: 13px;
+
+    letter-spacing: 2px;
+}
+
+
+/* =========================================================
+   EASTER EGG
+========================================================= */
+
+.secret {
+    position: fixed;
+
+    bottom: 15px;
+    right: 18px;
+
+    width: 12px;
+    height: 12px;
+
+    border-radius: 50%;
+
+    background: rgba(255,255,255,.05);
+
+    cursor: pointer;
+
+    z-index: 2000;
+
+    transition:
+        background .3s ease,
+        transform .3s ease;
+}
+
+.secret:hover {
+    background: rgba(255,255,255,.2);
+    transform: scale(1.5);
+}
+
+.secret-message {
+    position: fixed;
+
+    left: 50%;
+    top: 50%;
+
+    transform:
+        translate(-50%,-50%)
+        scale(.8);
+
+    width: min(500px, 85vw);
+
+    padding: 45px;
+
+    background:
+        rgba(10,10,16,.92);
+
+    border:
+        1px solid rgba(255,255,255,.15);
+
+    border-radius: 28px;
+
+    backdrop-filter: blur(30px);
+
+    text-align: center;
+
+    opacity: 0;
+    visibility: hidden;
+
+    z-index: 5000;
+
+    transition:
+        opacity .4s ease,
+        transform .4s ease,
+        visibility .4s ease;
+}
+
+.secret-message.show {
+    opacity: 1;
+    visibility: visible;
+
+    transform:
+        translate(-50%,-50%)
+        scale(1);
+}
+
+.secret-message h3 {
+    font-size: 30px;
+    font-weight: 300;
+}
+
+.secret-message p {
+    margin-top: 15px;
+
+    color: var(--muted);
+
+    line-height: 1.7;
+}
+
+.close-secret {
+    margin-top: 25px;
+
+    border: 1px solid rgba(255,255,255,.15);
+
+    background: rgba(255,255,255,.06);
+
+    color: white;
+
+    padding: 10px 20px;
+
+    border-radius: 999px;
+
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   CONFETTI
+========================================================= */
+
+.confetti {
+    position: fixed;
+
+    width: 8px;
+    height: 14px;
+
+    top: -20px;
+
+    z-index: 9000;
+
+    pointer-events: none;
+
+    animation:
+        confettiFall linear forwards;
+}
+
+@keyframes confettiFall {
+    to {
+        transform:
+            translate3d(
+                var(--x),
+                110vh,
+                0
+            )
+            rotate(720deg);
+
+        opacity: 0;
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 800px) {
+
+    .memory-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .countdown {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+    .section {
+        padding:
+            100px 22px;
+    }
+
+    .hero-name {
+        letter-spacing: -5px;
+    }
+
+    .letter-text {
+        font-size: 25px;
+    }
+}
+
+@media (max-width: 450px) {
+
+    .countdown {
+        gap: 8px;
+    }
+
+    .time-box {
+        padding: 22px 8px;
+    }
+
+    .time-number {
+        font-size: 35px;
+    }
+
+    .hero-button {
+        padding:
+            14px 22px;
+    }
+}
+</style>
 </head>
+
 
 <body>
 
-    <div class="container">
 
-        <div class="small">
+<!-- =====================================================
+     LOADER
+===================================================== -->
+
+<div id="loader">
+
+    <div class="loader-content">
+
+        <div class="loader-top">
+            PERSONAL PROJECT / 2026
+        </div>
+
+        <div class="loader-title">
+            Bir şeyler hazırlanıyor<span>...</span>
+        </div>
+
+        <div class="loader-bar">
+            <div
+                class="loader-progress"
+                id="loaderProgress">
+            </div>
+        </div>
+
+        <div
+            class="loader-status"
+            id="loaderStatus">
+            Başlatılıyor...
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     BACKGROUND
+===================================================== -->
+
+<canvas id="stars"></canvas>
+
+<canvas id="particles"></canvas>
+
+<div class="ambient">
+
+    <div class="glow one"></div>
+
+    <div class="glow two"></div>
+
+    <div class="glow three"></div>
+
+</div>
+
+
+<!-- =====================================================
+     NAV
+===================================================== -->
+
+<nav
+    class="nav"
+    id="nav">
+
+    <div class="logo">
+        made for <span>Emine</span>
+    </div>
+
+    <button
+        class="music-button"
+        id="musicButton"
+        aria-label="Müzik">
+
+        ♫
+
+    </button>
+
+</nav>
+
+
+<!-- =====================================================
+     HERO
+===================================================== -->
+
+<main>
+
+<section class="hero">
+
+    <div class="hero-inner">
+
+        <div class="eyebrow">
             SENİN İÇİN HAZIRLANDI
         </div>
 
-        <h1>Emine ❤️</h1>
+        <h1 class="hero-name">
+            Emine
+        </h1>
 
-        <p>Sana küçük bir şey hazırladım...</p>
+        <p class="hero-subtitle">
+            Sana küçük bir şey hazırladım...
+        </p>
 
-        <div class="heart">♥</div>
+        <button
+            class="hero-button"
+            id="startButton">
+
+            Başla
+
+            <span>→</span>
+
+        </button>
 
     </div>
+
+    <div class="scroll-hint">
+        AŞAĞI KAYDIR
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     INTRO
+===================================================== -->
+
+<section class="section">
+
+    <div class="section-inner">
+
+        <div class="section-label reveal">
+            01 / BAŞLANGIÇ
+        </div>
+
+        <h2 class="section-title reveal">
+
+            Bazı insanlar
+            hayatımıza gelir...
+
+            <span class="accent">
+                ve fark ettirmeden
+                güzel bir iz bırakır.
+            </span>
+
+        </h2>
+
+        <p class="section-text reveal">
+
+            Bu sayfanın aslında çok büyük bir amacı yok.
+            Sadece doğum gününde sana uzaktan da olsa
+            küçük bir gülümseme bırakmak istedim.
+
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     LETTER
+===================================================== -->
+
+<section class="section letter-section">
+
+    <div class="section-inner">
+
+        <div class="letter-card reveal">
+
+            <div class="letter-top">
+
+                <span>
+                    KÜÇÜK BİR NOT
+                </span>
+
+                <span>
+                    04 / 11
+                </span>
+
+            </div>
+
+            <div class="letter-text">
+
+                Bazen bir insanı tanımak için
+                yıllar gerekmez.
+
+                <br><br>
+
+                Bazen birkaç konuşma bile
+                o insanın hayatındaki yerini
+                değiştirebilir.
+
+                <br><br>
+
+                Ve sen...
+                <span class="pink">
+                    benim için böyle insanlardan biri oldun.
+                </span>
+
+            </div>
+
+            <div class="signature">
+
+                — Yusuf
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     MEMORIES
+===================================================== -->
+
+<section class="section">
+
+    <div class="section-inner">
+
+        <div class="section-label reveal">
+            02 / KÜÇÜK ŞEYLER
+        </div>
+
+        <h2 class="section-title reveal">
+
+            En güzel şeyler
+            bazen <span class="accent">küçük</span> olur.
+
+        </h2>
+
+        <p class="section-text reveal">
+
+            Büyük sözler söylemek yerine,
+            aklımda kalan küçük şeyleri
+            hatırlamak bana daha güzel geliyor.
+
+        </p>
+
+
+        <div class="memory-grid">
+
+            <article class="memory reveal">
+
+                <div class="memory-number">
+                    01
+                </div>
+
+                <h3>
+                    Gülüşler
+                </h3>
+
+                <p>
+                    Bazen ciddi bir konuşmanın ortasında
+                    bile saçma bir şey bulup gülebilmek.
+                </p>
+
+            </article>
+
+
+            <article class="memory reveal">
+
+                <div class="memory-number">
+                    02
+                </div>
+
+                <h3>
+                    Sohbetler
+                </h3>
+
+                <p>
+                    Konunun nereden başlayıp
+                    nereye geldiğini anlamadan
+                    saatlerce konuşabilmek.
+                </p>
+
+            </article>
+
+
+            <article class="memory reveal">
+
+                <div class="memory-number">
+                    03
+                </div>
+
+                <h3>
+                    Uzaklık
+                </h3>
+
+                <p>
+                    Bazen arada kilometreler olsa bile
+                    bir insanı yakın hissedebilmek.
+                </p>
+
+            </article>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     COUNTDOWN
+===================================================== -->
+
+<section class="section countdown-section">
+
+    <div class="section-inner">
+
+        <div class="section-label reveal">
+            03 / BEKLENEN GÜN
+        </div>
+
+        <h2 class="section-title reveal">
+            O güne kadar...
+        </h2>
+
+        <p class="section-text reveal"
+           style="margin-left:auto;margin-right:auto;">
+
+            Takvimde sadece bir gün.
+            Ama bugün benim için biraz daha özel.
+
+        </p>
+
+
+        <div
+            class="countdown reveal"
+            id="countdown">
+
+            <div class="time-box">
+
+                <div
+                    class="time-number"
+                    id="days">
+                    00
+                </div>
+
+                <div class="time-label">
+                    Gün
+                </div>
+
+            </div>
+
+
+            <div class="time-box">
+
+                <div
+                    class="time-number"
+                    id="hours">
+                    00
+                </div>
+
+                <div class="time-label">
+                    Saat
+                </div>
+
+            </div>
+
+
+            <div class="time-box">
+
+                <div
+                    class="time-number"
+                    id="minutes">
+                    00
+                </div>
+
+                <div class="time-label">
+                    Dakika
+                </div>
+
+            </div>
+
+
+            <div class="time-box">
+
+                <div
+                    class="time-number"
+                    id="seconds">
+                    00
+                </div>
+
+                <div class="time-label">
+                    Saniye
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     GIFT
+===================================================== -->
+
+<section class="section gift-section">
+
+    <div class="section-inner">
+
+        <div class="section-label reveal">
+            04 / SÜRPRİZ
+        </div>
+
+        <h2 class="section-title reveal">
+            Sana bir şey bıraktım.
+        </h2>
+
+        <p class="section-text reveal"
+           style="margin-left:auto;margin-right:auto;">
+
+            Açmak için kutuya dokun.
+
+        </p>
+
+
+        <div
+            class="gift reveal"
+            id="gift">
+
+            <div class="gift-lid"></div>
+
+            <div class="gift-box"></div>
+
+            <div class="gift-ribbon"></div>
+
+        </div>
+
+
+        <div
+            class="gift-message"
+            id="giftMessage">
+
+            <h3>
+                İyi ki doğdun, Emine. ❤️
+            </h3>
+
+            <p>
+
+                Umarım yeni yaşın sana
+                bolca mutluluk, güzel insanlar,
+                güzel anılar ve unutamayacağın
+                günler getirir.
+
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     FINAL
+===================================================== -->
+
+<section class="final-section">
+
+    <div class="reveal">
+
+        <div class="final-heart">
+            ♥
+        </div>
+
+        <div class="final-title">
+            İyi ki<br>
+            doğdun.
+        </div>
+
+        <p class="final-text">
+
+            Bu sayfayı belki birkaç dakika içinde
+            gezip kapatacaksın.
+
+            <br><br>
+
+            Ama ben bunu hazırlarken
+            yüzünde nasıl bir gülümseme
+            olacağını düşünerek yaptım.
+
+            <br><br>
+
+            Umarım güzel bir yaşın olur.
+
+        </p>
+
+        <div class="final-signature">
+
+            — Yusuf
+
+        </div>
+
+    </div>
+
+</section>
+
+</main>
+
+
+<!-- =====================================================
+     SECRET
+===================================================== -->
+
+<div
+    class="secret"
+    id="secret">
+</div>
+
+
+<div
+    class="secret-message"
+    id="secretMessage">
+
+    <h3>
+        Gizli bir yer buldun. 👀
+    </h3>
+
+    <p>
+
+        Buraya kadar geldiysen
+        gerçekten meraklısın. 😂
+
+        <br><br>
+
+        Neyse...
+        Bunu da sadece sen gördün.
+
+    </p>
+
+    <button
+        class="close-secret"
+        id="closeSecret">
+
+        Kapat
+
+    </button>
+
+</div>
+
+
+<!-- =====================================================
+     JAVASCRIPT
+===================================================== -->
+
+<script>
+
+/* =========================================================
+   LOADER
+========================================================= */
+
+const loader =
+    document.getElementById("loader");
+
+const loaderProgress =
+    document.getElementById("loaderProgress");
+
+const loaderStatus =
+    document.getElementById("loaderStatus");
+
+const loadingTexts = [
+    "Başlatılıyor...",
+    "Küçük bir şey hazırlanıyor...",
+    "Yıldızlar yükleniyor...",
+    "Kalpler hazırlanıyor...",
+    "Son dokunuşlar...",
+    "Hazır."
+];
+
+let loadingProgress = 0;
+
+const loadingInterval =
+    setInterval(() => {
+
+        loadingProgress +=
+            Math.random() * 12;
+
+        if (loadingProgress >= 100) {
+
+            loadingProgress = 100;
+
+            clearInterval(
+                loadingInterval
+            );
+
+            loaderProgress.style.width =
+                "100%";
+
+            loaderStatus.textContent =
+                "Hazır.";
+
+            setTimeout(() => {
+
+                loader.classList.add(
+                    "hidden"
+                );
+
+                document
+                    .getElementById("nav")
+                    .classList.add(
+                        "visible"
+                    );
+
+            }, 700);
+
+        } else {
+
+            loaderProgress.style.width =
+                loadingProgress + "%";
+
+            const index =
+                Math.min(
+                    loadingTexts.length - 1,
+                    Math.floor(
+                        loadingProgress /
+                        18
+                    )
+                );
+
+            loaderStatus.textContent =
+                loadingTexts[index];
+
+        }
+
+    }, 180);
+
+
+/* =========================================================
+   STARS
+========================================================= */
+
+const starCanvas =
+    document.getElementById("stars");
+
+const starCtx =
+    starCanvas.getContext("2d");
+
+let stars = [];
+
+function resizeStars() {
+
+    starCanvas.width =
+        window.innerWidth *
+        devicePixelRatio;
+
+    starCanvas.height =
+        window.innerHeight *
+        devicePixelRatio;
+
+    starCtx.setTransform(
+        devicePixelRatio,
+        0,
+        0,
+        devicePixelRatio,
+        0,
+        0
+    );
+
+    createStars();
+}
+
+function createStars() {
+
+    stars = [];
+
+    const count =
+        Math.min(
+            260,
+            Math.floor(
+                window.innerWidth *
+                window.innerHeight /
+                6500
+            )
+        );
+
+    for (
+        let i = 0;
+        i < count;
+        i++
+    ) {
+
+        stars.push({
+
+            x:
+                Math.random() *
+                window.innerWidth,
+
+            y:
+                Math.random() *
+                window.innerHeight,
+
+            radius:
+                Math.random() *
+                1.5 +
+                .2,
+
+            alpha:
+                Math.random() *
+                .7 +
+                .2,
+
+            speed:
+                Math.random() *
+                .02 +
+                .005,
+
+            phase:
+                Math.random() *
+                Math.PI *
+                2
+
+        });
+
+    }
+
+}
+
+function drawStars(time) {
+
+    starCtx.clearRect(
+        0,
+        0,
+        window.innerWidth,
+        window.innerHeight
+    );
+
+    for (const star of stars) {
+
+        const twinkle =
+            Math.sin(
+                time *
+                star.speed +
+                star.phase
+            ) *
+            .25;
+
+        starCtx.beginPath();
+
+        starCtx.arc(
+            star.x,
+            star.y,
+            star.radius,
+            0,
+            Math.PI * 2
+        );
+
+        starCtx.fillStyle =
+            `rgba(255,255,255,${
+                Math.max(
+                    .05,
+                    star.alpha +
+                    twinkle
+                )
+            })`;
+
+        starCtx.fill();
+
+    }
+
+    requestAnimationFrame(drawStars);
+}
+
+window.addEventListener(
+    "resize",
+    resizeStars
+);
+
+resizeStars();
+
+requestAnimationFrame(
+    drawStars
+);
+
+
+/* =========================================================
+   PARTICLE TOUCH EFFECT
+========================================================= */
+
+const particleCanvas =
+    document.getElementById("particles");
+
+const particleCtx =
+    particleCanvas.getContext("2d");
+
+let particles = [];
+
+function resizeParticles() {
+
+    particleCanvas.width =
+        window.innerWidth *
+        devicePixelRatio;
+
+    particleCanvas.height =
+        window.innerHeight *
+        devicePixelRatio;
+
+    particleCtx.setTransform(
+        devicePixelRatio,
+        0,
+        0,
+        devicePixelRatio,
+        0,
+        0
+    );
+
+}
+
+resizeParticles();
+
+window.addEventListener(
+    "resize",
+    resizeParticles
+);
+
+function createParticle(
+    x,
+    y
+) {
+
+    particles.push({
+
+        x,
+        y,
+
+        vx:
+            (Math.random() - .5)
+            * 2.5,
+
+        vy:
+            (Math.random() - .5)
+            * 2.5,
+
+        size:
+            Math.random() * 4 + 1,
+
+        life:
+            1,
+
+        decay:
+            Math.random() * .025
+            + .015
+
+    });
+
+}
+
+function particleLoop() {
+
+    particleCtx.clearRect(
+        0,
+        0,
+        window.innerWidth,
+        window.innerHeight
+    );
+
+    particles =
+        particles.filter(
+            particle => {
+                return particle.life > 0;
+            }
+        );
+
+    for (const particle of particles) {
+
+        particle.x += particle.vx;
+
+        particle.y += particle.vy;
+
+        particle.life -=
+            particle.decay;
+
+        particleCtx.beginPath();
+
+        particleCtx.arc(
+            particle.x,
+            particle.y,
+            particle.size,
+            0,
+            Math.PI * 2
+        );
+
+        particleCtx.fillStyle =
+            `rgba(255,159,197,${
+                particle.life
+            })`;
+
+        particleCtx.fill();
+
+    }
+
+    requestAnimationFrame(
+        particleLoop
+    );
+
+}
+
+particleLoop();
+
+
+window.addEventListener(
+    "pointermove",
+    event => {
+
+        if (
+            Math.random() >
+            .55
+        ) {
+
+            createParticle(
+                event.clientX,
+                event.clientY
+            );
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   START BUTTON
+========================================================= */
+
+const startButton =
+    document.getElementById(
+        "startButton"
+    );
+
+startButton.addEventListener(
+    "click",
+    () => {
+
+        window.scrollTo({
+
+            top:
+                window.innerHeight,
+
+            behavior:
+                "smooth"
+
+        });
+
+    }
+);
+
+
+/* =========================================================
+   SCROLL REVEAL
+========================================================= */
+
+const revealElements =
+    document.querySelectorAll(
+        ".reveal"
+    );
+
+const observer =
+    new IntersectionObserver(
+        entries => {
+
+            entries.forEach(
+                entry => {
+
+                    if (
+                        entry.isIntersecting
+                    ) {
+
+                        entry.target
+                            .classList
+                            .add("show");
+
+                    }
+
+                }
+            );
+
+        },
+        {
+            threshold: .15
+        }
+    );
+
+revealElements.forEach(
+    element => {
+        observer.observe(element);
+    }
+);
+
+
+/* =========================================================
+   COUNTDOWN
+========================================================= */
+
+function updateCountdown() {
+
+    const now =
+        new Date();
+
+    let year =
+        now.getFullYear();
+
+    let birthday =
+        new Date(
+            year,
+            10,
+            4,
+            0,
+            0,
+            0
+        );
+
+    if (
+        now > birthday
+    ) {
+
+        birthday =
+            new Date(
+                year + 1,
+                10,
+                4,
+                0,
+                0,
+                0
+            );
+
+    }
+
+    const difference =
+        birthday.getTime()
+        -
+        now.getTime();
+
+    const days =
+        Math.floor(
+            difference /
+            (1000 * 60 * 60 * 24)
+        );
+
+    const hours =
+        Math.floor(
+            (
+                difference /
+                (1000 * 60 * 60)
+            ) % 24
+        );
+
+    const minutes =
+        Math.floor(
+            (
+                difference /
+                (1000 * 60)
+            ) % 60
+        );
+
+    const seconds =
+        Math.floor(
+            (
+                difference /
+                1000
+            ) % 60
+        );
+
+    document.getElementById(
+        "days"
+    ).textContent =
+        String(days)
+            .padStart(2,"0");
+
+    document.getElementById(
+        "hours"
+    ).textContent =
+        String(hours)
+            .padStart(2,"0");
+
+    document.getElementById(
+        "minutes"
+    ).textContent =
+        String(minutes)
+            .padStart(2,"0");
+
+    document.getElementById(
+        "seconds"
+    ).textContent =
+        String(seconds)
+            .padStart(2,"0");
+
+}
+
+updateCountdown();
+
+setInterval(
+    updateCountdown,
+    1000
+);
+
+
+/* =========================================================
+   GIFT
+========================================================= */
+
+const gift =
+    document.getElementById(
+        "gift"
+    );
+
+const giftMessage =
+    document.getElementById(
+        "giftMessage"
+    );
+
+let giftOpened = false;
+
+gift.addEventListener(
+    "click",
+    () => {
+
+        if (giftOpened)
+            return;
+
+        giftOpened = true;
+
+        gift.classList.add(
+            "open"
+        );
+
+        setTimeout(
+            () => {
+
+                giftMessage.classList.add(
+                    "show"
+                );
+
+                launchConfetti();
+
+            },
+            500
+        );
+
+    }
+);
+
+
+/* =========================================================
+   CONFETTI
+========================================================= */
+
+function launchConfetti() {
+
+    const amount = 90;
+
+    for (
+        let i = 0;
+        i < amount;
+        i++
+    ) {
+
+        const piece =
+            document.createElement(
+                "div"
+            );
+
+        piece.className =
+            "confetti";
+
+        const x =
+            (
+                Math.random() *
+                100
+            ) + "vw";
+
+        const duration =
+            (
+                Math.random() *
+                3 +
+                2
+            ) + "s";
+
+        piece.style.left =
+            x;
+
+        piece.style.setProperty(
+            "--x",
+            (
+                Math.random() *
+                250 -
+                125
+            ) + "px"
+        );
+
+        piece.style.animationDuration =
+            duration;
+
+        piece.style.background =
+            [
+                "#ff5f9e",
+                "#ffb5d5",
+                "#9b7cff",
+                "#6ca8ff",
+                "#ffffff"
+            ][
+                Math.floor(
+                    Math.random() * 5
+                )
+            ];
+
+        document.body.appendChild(
+            piece
+        );
+
+        setTimeout(
+            () => {
+                piece.remove();
+            },
+            5500
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   SECRET
+========================================================= */
+
+const secret =
+    document.getElementById(
+        "secret"
+    );
+
+const secretMessage =
+    document.getElementById(
+        "secretMessage"
+    );
+
+const closeSecret =
+    document.getElementById(
+        "closeSecret"
+    );
+
+secret.addEventListener(
+    "click",
+    () => {
+
+        secretMessage.classList.add(
+            "show"
+        );
+
+    }
+);
+
+closeSecret.addEventListener(
+    "click",
+    () => {
+
+        secretMessage.classList.remove(
+            "show"
+        );
+
+    }
+);
+
+
+/* =========================================================
+   KEYBOARD EASTER EGG
+========================================================= */
+
+let keySequence = "";
+
+const secretCode =
+    "emine";
+
+window.addEventListener(
+    "keydown",
+    event => {
+
+        keySequence +=
+            event.key.toLowerCase();
+
+        if (
+            keySequence.length >
+            secretCode.length
+        ) {
+
+            keySequence =
+                keySequence.slice(
+                    -secretCode.length
+                );
+
+        }
+
+        if (
+            keySequence ===
+            secretCode
+        ) {
+
+            launchConfetti();
+
+            keySequence = "";
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   MOUSE PARALLAX
+========================================================= */
+
+let mouseX = 0;
+let mouseY = 0;
+
+window.addEventListener(
+    "pointermove",
+    event => {
+
+        mouseX =
+            (
+                event.clientX /
+                window.innerWidth -
+                .5
+            );
+
+        mouseY =
+            (
+                event.clientY /
+                window.innerHeight -
+                .5
+            );
+
+        const glows =
+            document.querySelectorAll(
+                ".glow"
+            );
+
+        glows.forEach(
+            (
+                glow,
+                index
+            ) => {
+
+                const amount =
+                    (
+                        index + 1
+                    ) * 12;
+
+                glow.style.transform =
+                    `translate(
+                        ${mouseX * amount}px,
+                        ${mouseY * amount}px
+                    )`;
+
+            }
+        );
+
+    }
+);
+
+
+/* =========================================================
+   MUSIC SYSTEM
+========================================================= */
+
+let audio =
+    null;
+
+const musicButton =
+    document.getElementById(
+        "musicButton"
+    );
+
+musicButton.addEventListener(
+    "click",
+    () => {
+
+        if (!audio) {
+
+            audio =
+                new Audio(
+                    "music.mp3"
+                );
+
+            audio.loop = true;
+
+        }
+
+        if (
+            audio.paused
+        ) {
+
+            audio.play()
+                .then(() => {
+
+                    musicButton.textContent =
+                        "❚❚";
+
+                })
+                .catch(() => {
+
+                    alert(
+                        "Önce music.mp3 dosyasını siteye ekle."
+                    );
+
+                });
+
+        } else {
+
+            audio.pause();
+
+            musicButton.textContent =
+                "♫";
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   DOUBLE CLICK HEART
+========================================================= */
+
+document.addEventListener(
+    "dblclick",
+    event => {
+
+        for (
+            let i = 0;
+            i < 10;
+            i++
+        ) {
+
+            createParticle(
+                event.clientX,
+                event.clientY
+            );
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   VISIBILITY
+========================================================= */
+
+document.addEventListener(
+    "visibilitychange",
+    () => {
+
+        if (
+            document.hidden &&
+            audio &&
+            !audio.paused
+        ) {
+
+            audio.pause();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   CONSOLE MESSAGE
+========================================================= */
+
+console.log(
+    "%c❤️ Emine için hazırlanmış özel bir site.",
+    "font-size:18px;color:#ff9fc5;"
+);
+
+console.log(
+    "%cBuraya kadar geldiysen geliştirici moduna girdin. 👀",
+    "font-size:13px;color:#9b7cff;"
+);
+
+</script>
 
 </body>
 </html>
